@@ -17,6 +17,12 @@ public class RobotTests {
 		//   wait 1.5 seconds between queries
 		testIRSensor(SensorPort.S4, 10, 1500);
 		
+		// Test Color sensor on robot port #3,
+		//   query the sensor 10 times,
+		//   wait 1.5 seconds between queries
+		testColorSensor(SensorPort.S3, 10, 1500);
+		testIDColorSensor(SensorPort.S3, 10, 1500);
+		
 		
 		// Motor Code
 		UnregulatedMotor b = new UnregulatedMotor(MotorPort.B);
@@ -34,7 +40,66 @@ public class RobotTests {
 		b.close();
 		c.close();
 	}
+
+	// Port: port that sensor is connected to
+	// iterations: number of times to query the sensor
+	// delay: number of milliseconds between iterations	
+	private static void testIDColorSensor(Port port, int iterations, long delay){
+		// get the IR sensor on the specific robot port
+		EV3ColorSensor sensor = new EV3ColorSensor(port);
+		
+		// IR Sensor
+		for (int i=0; i < iterations; i++){
+			SampleProvider color = sensor.getColorIDMode();
+			
+			int colorID = sensor.getColorID();
+			
+			// Print newest sample value
+			System.out.println(""+colorID);
+			
+			// delay before next query to sensor
+			Delay.msDelay(delay);
+		}
+		
+		// close the sensor
+		((Device) sensor).close();
+	}
+
 	
+	// Port: port that sensor is connected to
+	// iterations: number of times to query the sensor
+	// delay: number of milliseconds between iterations	
+	private static void testColorSensor(Port port, int iterations, long delay){
+		// get the IR sensor on the specific robot port
+		EV3ColorSensor sensor = new EV3ColorSensor(port);
+		
+		// IR Sensor
+		for (int i=0; i < iterations; i++){
+			SampleProvider color = sensor.getRGBMode();
+
+			// stack a filter on the sensor that gives the running average of the last 5 samples
+			SampleProvider average = new MeanFilter(color, 5);
+
+			// initialize an array of floats for fetching samples
+			float[] sample = new float[average.sampleSize()];
+			
+			// fetch a sample
+			average.fetchSample(sample, 0);
+			
+			// Print newest sample value
+			System.out.println("("+sample[0]+","+sample[1]+","+sample[2]+")");
+			
+			// delay before next query to sensor
+			Delay.msDelay(delay);
+		}
+		
+		// close the sensor
+		((Device) sensor).close();
+	}
+	
+	// Port: port that sensor is connected to
+	// iterations: number of times to query the sensor
+	// delay: number of milliseconds between iterations
 	private static void testIRSensor(Port port, int iterations, long delay){
 		// get the IR sensor on the specific robot port
 		SensorModes sensor = new EV3IRSensor(port);

@@ -1,0 +1,55 @@
+import lejos.hardware.*;
+import lejos.hardware.sensor.*;
+import lejos.hardware.motor.*;
+import lejos.hardware.port.*;
+import lejos.utility.Delay;
+import lejos.hardware.Brick;
+import lejos.hardware.BrickFinder;
+
+public class TouchStop {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Button.waitForAnyPress();
+		for(int i = 0; i < 3; i++)
+		{
+			Sound.playTone(500, 800);
+			Delay.msDelay(200);
+						
+		}//end for i<3
+		
+		Sound.playTone(1000, 800);
+		
+		UnregulatedMotor b = new UnregulatedMotor(MotorPort.B);
+		UnregulatedMotor c = new UnregulatedMotor(MotorPort.C);
+	    Brick brick = BrickFinder.getDefault();
+	    Port s4 = brick.getPort("S4");
+	    EV3TouchSensor sensor = new EV3TouchSensor(s4);
+
+	    SimpleTouch touch=new SimpleTouch(sensor);
+
+		while(!touch.isPressed())
+		{
+			b.setPower(10);
+			c.setPower(10);
+			b.forward();
+			c.forward();
+		}//end while !touch
+		
+		b.flt();
+		c.flt();
+		b.close();
+		c.close();			
+		sensor.close();
+				
+		}
+		}
+
+
+
+
+
+		
+
+
+

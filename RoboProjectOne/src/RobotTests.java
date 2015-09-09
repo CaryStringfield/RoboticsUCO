@@ -23,6 +23,11 @@ public class RobotTests {
 		testColorSensor(SensorPort.S3, 10, 1500);
 		testIDColorSensor(SensorPort.S3, 10, 1500);
 		
+		// Test for the touch sensor, port 2
+		// query sensor 10 times,
+		// wait 1.5 seconds between queries
+		testTouchSensor(SensorPort.S2, 10, 1500);
+		
 		
 		// Motor Code
 		UnregulatedMotor b = new UnregulatedMotor(MotorPort.B);
@@ -127,5 +132,40 @@ public class RobotTests {
 		// close the sensor
 		((Device) sensor).close();
 	}
+
+	// Port: port that sensor is connected to
+	// iterations: number of times to query the sensor
+	// delay: number of milliseconds between iterations
+	private static void testTouchSensor(Port port, int iterations, long delay){
+		//Port port = LocalEV3.get().getPort("S2");
+		
+		// get the Touch sensor on the specific robot port
+		SensorModes sensor = new EV3TouchSensor(port);
+		
+		// Touch Sensor
+		for (int i=0; i < iterations; i++){
+			SampleProvider touch = sensor.getMode("Touch");
+
+			// stack a filter on the sensor that gives the running average of the last 5 samples
+			SampleProvider average = new MeanFilter(touch, 5);
+
+			// initialize an array of floats for fetching samples
+			float[] sample = new float[average.sampleSize()];
+			
+			// fetch a sample
+			average.fetchSample(sample, 0);
+			
+			// Print newest sample value
+			System.out.println(sample[0]);
+			
+			// delay before next query to sensor
+			Delay.msDelay(delay);
+		}
+		
+		// close the sensor
+		((Device) sensor).close();
+	}
+	
+	// code for ULTRA-Sonic found at http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/
 
 }

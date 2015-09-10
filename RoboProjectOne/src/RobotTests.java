@@ -14,6 +14,21 @@ public class RobotTests {
 	public static void main(String[] args) {
 		// runTests();
 		
+		// Test Edge Seek
+		System.out.println("Edge Seek Test");
+		Button.waitForAnyPress();
+		
+		// run edge test
+		//   left motor on B
+		//   right motor on A
+		//   IRSensor on S1
+		//   min distance on IR to keep moving is 3.0
+		stopAtEdgeTest(MotorPort.B, MotorPort.C, SensorPort.S1, 3.0);
+
+		// Test Odometry
+		System.out.println("Odometry Test");
+		Button.waitForAnyPress();
+		
 		// wheel diameter
 		double wheelDiameter = DifferentialPilot.WHEEL_SIZE_EV3;
 		// width between sides, I think?
@@ -37,6 +52,48 @@ public class RobotTests {
 		System.out.println("End: " + pp.getPose());
 		Button.waitForAnyPress();
 		
+	}
+	
+	// Test For Simple Edge Detect
+	// 	robot moves forward until the
+	//  IR sensor reads a large distance
+	private static void stopAtEdgeTest(Port left, Port right, Port sp, double minDist){
+		// Motor Code
+		UnregulatedMotor b = new UnregulatedMotor(left);
+		UnregulatedMotor c = new UnregulatedMotor(right);
+		// get the IR sensor on the specific robot port
+		SensorModes sensor = new EV3IRSensor(sp);
+
+		// distance provider
+		SampleProvider distance= sensor.getMode("Distance");
+		// stack a filter on the sensor that gives the running average of the last 5 samples
+		SampleProvider average = new MeanFilter(distance, 5);
+		// initialize an array of floats for fetching samples
+		float[] sample = new float[average.sampleSize()];
+			
+		// Full power
+		b.setPower(100);
+		c.setPower(100);
+				
+		// begin forward movement
+		b.forward();
+		c.forward();
+		
+		// check distance, if to far then stop
+		do{
+			// fetch a sample
+			average.fetchSample(sample, 0);
+		}while(sample[0] <= minDist);
+				
+		// 'softly' kill the motors
+		b.flt();
+		c.flt();
+		
+		// free the motors
+		b.close();
+		c.close();		
+		// close the sensor
+		((Device) sensor).close();
 	}
 	
 	// ############################################

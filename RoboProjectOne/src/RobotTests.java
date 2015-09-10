@@ -27,6 +27,7 @@ public class RobotTests {
 		System.out.println("Start: " + pp.getPose());
 		Button.waitForAnyPress();
 		
+		// performs various super cool tricks
 		robot.rotate(90);
 		robot.travel(100);
 		robot.travel(-100);
@@ -38,6 +39,9 @@ public class RobotTests {
 		
 	}
 	
+	// ############################################
+	// # Various motor and sensory test functions #
+	// ############################################
 	private void runTests(){
 		System.out.println("Press button!");
 		Button.waitForAnyPress();
@@ -82,16 +86,25 @@ public class RobotTests {
 		// Motor Code
 		UnregulatedMotor b = new UnregulatedMotor(MotorPort.B);
 		UnregulatedMotor c = new UnregulatedMotor(MotorPort.C);
+		
+		// Full power
 		b.setPower(100);
 		c.setPower(100);
-				
+		
+		// motor b goes backward
+		//   motor c goes forward
+		//   rotation ensues
 		b.backward();
 		c.forward();
+		
 		// go forward for 1.5 seconds
 		Delay.msDelay(1500);
-				
+		
+		// 'softly' kill the motors
 		b.flt();
 		c.flt();
+		
+		// free the motors
 		b.close();
 		c.close();
 	}

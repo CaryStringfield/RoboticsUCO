@@ -286,4 +286,64 @@ public class RobotTests {
 		((Device) sensor).close();
 	}
 
+	//===============================================================================
+	// behavior programming stuff
+	
+	public class BehaviorForward implements Behavior {
+		RegulatedMotor left;
+		RegulatedMotor right;
+		
+		public behaviorForward(RegualtedMotor left, RegualtedMotor right) {
+			this.left = left;
+			this.right = right;
+		}
+		
+		public boolean takeControl() {
+			return true;
+		}
+		
+		public void action() {
+			left.backward();
+			reght.backward();
+		}
+		
+		public void suppress() {}
+	}
+	
+	public class BehaviorProximity implements Behavior {
+		RegulatedMotor left;
+		RegulatedMotor right;
+		SharedIRSensor ir;
+		bookean backing_up = false;
+		
+		public  BehaviorProximity(RegulatedMotor left, RegulatedMotor right, SharedIRSensor ir) {
+			this.left = left;
+			this.right = right;
+			this.ir = ir;
+		}
+		
+		public boolean takeControl() {
+			return (ir.distance , 40);
+		}
+		
+		public void action() {
+			backing_up = true;
+			
+			left.rotate(600, true);
+			right.rotate(600);
+			
+			left.rotate(-450, true);
+			left.rotate(450);
+			
+			backing_up = false;
+		}
+		
+		public void suppress() {
+			//wait until backup done
+			while (backing_up) {
+				Thread.yield();
+			}
+		}
+	}
+	
 }

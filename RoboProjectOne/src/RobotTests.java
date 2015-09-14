@@ -15,15 +15,15 @@ public class RobotTests {
 		// runTests();
 		
 		// Test Edge Seek
-		System.out.println("Edge Seek Test");
-		Button.waitForAnyPress();
+		//System.out.println("Edge Seek Test");
+		//Button.waitForAnyPress();
 		
 		// run edge test
 		//   left motor on B
 		//   right motor on A
 		//   IRSensor on S1
 		//   min distance on IR to keep moving is 3.0
-		stopAtEdgeTest(MotorPort.B, MotorPort.C, SensorPort.S1, 3.0);
+		//stopAtEdgeTest(MotorPort.B, MotorPort.C, SensorPort.S1, 3.0);
 
 		// Test Odometry
 		System.out.println("Odometry Test");
@@ -32,7 +32,7 @@ public class RobotTests {
 		// wheel diameter
 		double wheelDiameter = DifferentialPilot.WHEEL_SIZE_EV3;
 		// width between sides, I think?
-		double width = 15.2;
+		double width = 14.5;
 		
 		// used for making 'precise' movements with robot
 		DifferentialPilot robot = new DifferentialPilot(wheelDiameter,width,Motor.C,Motor.B);
@@ -40,7 +40,7 @@ public class RobotTests {
 
 		// start position
 		System.out.println("Start: " + pp.getPose());
-		Button.waitForAnyPress();
+		//Button.waitForAnyPress();
 		
 		// performs various super cool tricks
 		robot.rotate(90);

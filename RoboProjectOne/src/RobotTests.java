@@ -44,8 +44,8 @@ public class RobotTests {
 		
 		// performs various super cool tricks
 		robot.rotate(90);
-		robot.travel(100);
-		robot.travel(-100);
+		robot.travel(20);
+		robot.travel(-20);
 		robot.rotate(-90);
 		
 		// end position

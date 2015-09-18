@@ -18,7 +18,7 @@ public class RoundTheTable {
 	
 	public static void main(String[] args) {
 		double diam = DifferentialPilot.WHEEL_SIZE_EV3;
-		double trackwidth = 15.2;
+		double trackwidth = 14.5;
 		boolean homeFound = false;
 		
 		// Motors on ports B and C

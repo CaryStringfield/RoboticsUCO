@@ -1,18 +1,8 @@
-import lejos.hardware.*;
-import lejos.hardware.lcd.LCD;
-import lejos.hardware.motor.Motor;
-import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3IRSensor;
-import lejos.hardware.sensor.SensorMode;
-import lejos.robotics.navigation.*;
-import lejos.utility.*;
-
 
 /* 
  * Whith IR facing down should move around the table
  * 
  */
-public class PerpetualRov3r {
 
 import lejos.hardware.*;
 import lejos.hardware.lcd.LCD;
@@ -68,4 +58,3 @@ public class RoundTheTable {
 
 }
 
-}

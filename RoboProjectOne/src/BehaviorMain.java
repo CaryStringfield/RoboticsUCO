@@ -3,6 +3,8 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3IRSensor;
+import lejos.hardware.sensor.EV3TouchSensor;
+import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.subsumption.Arbitrator;
@@ -16,10 +18,13 @@ public class BehaviorMain {
 		RegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.B);
 		RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
 		SharedIRSensor ir = new SharedIRSensor();
+		SharedTouchSensor tch = new SharedTouchSensor();
 		
 		Behavior b1 = new BehaviorForward(left, right);
 		Behavior b2 = new BehaviorProximity(left, right, ir);
-		Behavior[] behave = {b1, b2};
+		Behavior b3 = new BehaviorTouch(left, right, tch);
+		
+		Behavior[] behave = {b1, b2, b3};
 		arby = new Arbitrator(behave);
 		arby.start();		
 	}
@@ -47,6 +52,30 @@ class SharedIRSensor extends Thread {
 				distance = (int)sample[0];
 			LCD.drawString("Control: " + control, 0, 0);
 			LCD.drawString("Distance: " + distance + " ", 0, 1);
+			Thread.yield();
+		}
+	}
+}
+
+class SharedTouchSensor extends Thread {
+	SensorModes sensor = new EV3TouchSensor(SensorPort.S2);
+	SampleProvider touch = sensor.getMode("Touch");
+	public boolean contact;
+	
+	SharedTouchSensor() {
+		this.setDaemon(true);
+		this.start();
+	}
+	
+	public void run() {
+		while (true) {
+			float[] sample = new float[touch.sampleSize()];
+			touch.fetchSample(sample, 0);
+			if((int)sample[0] == 1)
+				contact = true;
+			else
+				contact = false;
+				
 			Thread.yield();
 		}
 	}

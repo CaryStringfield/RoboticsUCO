@@ -28,27 +28,27 @@ public class RoundTheTable {
 		EV3IRSensor ir = new EV3IRSensor(SensorPort.S1);
 		SensorMode distMode = ir.getMode("Distance");
 		int distance = 10;
-		
-		while (!homeFound)
-		{
+		rov3r.setTravelSpeed(10);
+
 		rov3r.forward();
 		int turns = 0;
-		while (!Button.ESCAPE.isDown()) {
+		while (!homeFound && !Button.ESCAPE.isDown())
+		{
 			
 			float[] sample = new float[distMode.sampleSize()];
 			distMode.fetchSample(sample, 0);
-				distance = (int)sample[0];
-				LCD.drawString("DiST: ", 0, 2);
-				LCD.drawInt(distance, 3,  5, 2);
+			distance = (int)sample[0];
+			LCD.drawString("DiST: ", 0, 2);
+			LCD.drawInt(distance, 3,  5, 2);
 				
-				if (distance > 10 ) {
-					rov3r.travel(-20);
-					rov3r.rotate(90);
-					rov3r.forward();
-					turns ++;
-				}
-				Delay.msDelay(100);				
-		}
+			if (distance > 5 ) {
+				rov3r.travel(-10);
+				rov3r.rotate(90);
+				rov3r.forward();
+				turns ++;
+			}
+			//Delay.msDelay(100);				
+		
 			if(turns >= 4)
 				homeFound = true;
 		}

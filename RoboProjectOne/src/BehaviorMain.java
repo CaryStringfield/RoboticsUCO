@@ -2,6 +2,7 @@ import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3IRSensor;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.hardware.sensor.SensorModes;
@@ -19,14 +20,39 @@ public class BehaviorMain {
 		RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
 		SharedIRSensor ir = new SharedIRSensor();
 		SharedTouchSensor tch = new SharedTouchSensor();
+		SharedColorSensor clr = new SharedColorSensor();
 		
 		Behavior b1 = new BehaviorForward(left, right);
 		Behavior b2 = new BehaviorProximity(left, right, ir);
 		Behavior b3 = new BehaviorTouch(left, right, tch);
+		Behavior b4 = new BehaviorSenseEdge(left, right, clr);
 		
-		Behavior[] behave = {b1, b2, b3};
+		Behavior[] behave = {b1, b2, b3, b4};
 		arby = new Arbitrator(behave);
 		arby.start();		
+	}
+}
+
+class SharedColorSensor extends Thread {
+	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S3);
+	SampleProvider sp = clr.getRedMode();
+	public float normal = .5F;
+	boolean edge;
+	
+	SharedColorSensor() {
+		this.edge = false;
+		this.setDaemon(true);
+		this.start();
+	}
+	
+	public void run() {
+		float[] sample = new float[clr.sampleSize()];
+		clr.fetchSample(sample, 0);
+		if(sample[0] < normal)
+			edge = true;
+		else
+			edge = false;
+		Thread.yield();
 	}
 }
 
@@ -80,3 +106,4 @@ class SharedTouchSensor extends Thread {
 		}
 	}
 }
+

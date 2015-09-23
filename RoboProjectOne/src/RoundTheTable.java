@@ -49,7 +49,7 @@ public class RoundTheTable {
 			}
 			//Delay.msDelay(100);				
 		
-			if(turns >= 4)
+			if(turns >= 2)
 				homeFound = true;
 		}
 		

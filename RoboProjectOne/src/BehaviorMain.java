@@ -1,5 +1,6 @@
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.motor.Motor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
@@ -8,6 +9,7 @@ import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
+import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
@@ -16,6 +18,10 @@ public class BehaviorMain {
 	static Arbitrator arby;
 	
 	public static void main (String[] args) {
+		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
+		pilot.robot.rotate(90);
+		pilot.alive = false;
+		
 		RegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.B);
 		RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
 		SharedIRSensor ir = new SharedIRSensor();
@@ -102,6 +108,26 @@ class SharedTouchSensor extends Thread {
 			else
 				contact = false;
 				
+			Thread.yield();
+		}
+	}
+}
+
+class SharedDifferentialPilot extends Thread{
+	private double diam = DifferentialPilot.WHEEL_SIZE_EV3;
+	private double trackwidth = 14.5;
+	
+	// Motors on ports B and C
+	public DifferentialPilot robot = new DifferentialPilot(diam, trackwidth, Motor.B, Motor.C);
+	public boolean alive = true;
+	
+	public SharedDifferentialPilot(){
+		this.setDaemon(true);
+		this.start();
+	}
+	
+	public void run(){
+		while(alive){
 			Thread.yield();
 		}
 	}

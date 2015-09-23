@@ -18,22 +18,22 @@ public class BehaviorMain {
 	static Arbitrator arby;
 	
 	public static void main (String[] args) {
-		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
-		pilot.robot.rotate(90);
-		pilot.alive = false;
+		//SharedDifferentialPilot pilot = new SharedDifferentialPilot();
+		//pilot.robot.rotate(90);
+		//pilot.alive = false;
 		
 		RegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.B);
 		RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
 		SharedIRSensor ir = new SharedIRSensor();
-		SharedTouchSensor tch = new SharedTouchSensor();
+		//SharedTouchSensor tch = new SharedTouchSensor();
 		SharedColorSensor clr = new SharedColorSensor();
 		
 		Behavior b1 = new BehaviorForward(left, right);
 		Behavior b2 = new BehaviorProximity(left, right, ir);
-		Behavior b3 = new BehaviorTouch(left, right, tch);
+		//Behavior b3 = new BehaviorTouch(left, right, tch);
 		Behavior b4 = new BehaviorSenseEdge(left, right, clr);
 		
-		Behavior[] behave = {b1, b2, b3, b4};
+		Behavior[] behave = {b1, b2, b4};
 		arby = new Arbitrator(behave);
 		arby.start();		
 	}
@@ -42,7 +42,7 @@ public class BehaviorMain {
 class SharedColorSensor extends Thread {
 	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S3);
 	SampleProvider sp = clr.getRedMode();
-	public float normal = .5F;
+	public float normal = .4F;
 	boolean edge;
 	
 	SharedColorSensor() {
@@ -52,8 +52,8 @@ class SharedColorSensor extends Thread {
 	}
 	
 	public void run() {
-		float[] sample = new float[clr.sampleSize()];
-		clr.fetchSample(sample, 0);
+		float[] sample = new float[sp.sampleSize()];
+		sp.fetchSample(sample, 0);
 		if(sample[0] < normal)
 			edge = true;
 		else

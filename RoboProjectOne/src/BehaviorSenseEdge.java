@@ -23,7 +23,7 @@ public class BehaviorSenseEdge implements Behavior {
 	public void action() {
 		turn_left = true;
 		
-		left.flt();
+		left.flt(); 
 
 		turn_left = false;
 	}

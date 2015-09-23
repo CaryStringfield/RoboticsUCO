@@ -58,6 +58,7 @@ class SharedColorSensor extends Thread {
 			edge = true;
 		else
 			edge = false;
+		LCD.drawString("on edge: " + edge + " ", 0, 2); //for debugging later
 		Thread.yield();
 	}
 }

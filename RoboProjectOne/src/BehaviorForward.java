@@ -3,12 +3,10 @@ import lejos.robotics.subsumption.Behavior;
 
 //move the robot forward	
 	public class BehaviorForward implements Behavior {
-		RegulatedMotor left;
-		RegulatedMotor right;
+		private SharedDifferentialPilot sharedPilot;
 		
-		public BehaviorForward(RegulatedMotor left, RegulatedMotor right) {
-			this.left = left;
-			this.right = right;
+		public BehaviorForward(SharedDifferentialPilot sharedPilot) {
+			this.sharedPilot = sharedPilot;
 		}
 		
 		public boolean takeControl() {
@@ -16,11 +14,12 @@ import lejos.robotics.subsumption.Behavior;
 		}
 		
 		public void action() {
-			left.backward();
-			right.backward();
+			sharedPilot.robot.forward();
 		}
-		
-		public void suppress() {}
+		 
+		public void suppress() {
+			sharedPilot.robot.stop();
+		}
 	}
 	
 	

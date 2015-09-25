@@ -18,22 +18,24 @@ public class BehaviorMain {
 	static Arbitrator arby;
 	
 	public static void main (String[] args) {
-		//SharedDifferentialPilot pilot = new SharedDifferentialPilot();
+		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
 		//pilot.robot.rotate(90);
 		//pilot.alive = false;
 		
-		RegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.B);
-		RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
+		//RegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.B);
+		//RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
 		SharedIRSensor ir = new SharedIRSensor();
 		//SharedTouchSensor tch = new SharedTouchSensor();
-		SharedColorSensor clr = new SharedColorSensor();
+		//SharedColorSensor clr = new SharedColorSensor();
 		
-		Behavior b1 = new BehaviorForward(left, right);
-		Behavior b2 = new BehaviorProximity(left, right, ir);
+		Behavior bForward = new BehaviorForward(pilot);
+		Behavior bEdgeAvoid = new BehaviorAvoidEdge(pilot, ir);
+		//Behavior b2 = new BehaviorProximity(left, right, ir);
 		//Behavior b3 = new BehaviorTouch(left, right, tch);
-		Behavior b4 = new BehaviorSenseEdge(left, right, clr);
+		//Behavior b4 = new BehaviorSenseEdge(left, right, clr);
+		Behavior die = new BehaviorDie();
 		
-		Behavior[] behave = {b1, b2, b4};
+		Behavior[] behave = {bForward, bEdgeAvoid, die};
 		arby = new Arbitrator(behave);
 		arby.start();		
 	}
@@ -117,12 +119,17 @@ class SharedTouchSensor extends Thread {
 class SharedDifferentialPilot extends Thread{
 	private double diam = DifferentialPilot.WHEEL_SIZE_EV3;
 	private double trackwidth = 14.5;
+	private float travelSpeed = 10;
+	private float rotateSpeed = 20;
 	
 	// Motors on ports B and C
 	public DifferentialPilot robot = new DifferentialPilot(diam, trackwidth, Motor.B, Motor.C);
 	public boolean alive = true;
 	
 	public SharedDifferentialPilot(){
+		robot.setTravelSpeed(travelSpeed);
+		robot.setRotateSpeed(rotateSpeed);
+		
 		this.setDaemon(true);
 		this.start();
 	}

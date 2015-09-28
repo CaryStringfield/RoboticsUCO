@@ -26,7 +26,7 @@ public class BehaviorAvoidEdge implements Behavior {
 		sharedPilot.robot.stop();
 	}
 
-	@Override
+	@Override	
 	public void suppress() {}
 
 }

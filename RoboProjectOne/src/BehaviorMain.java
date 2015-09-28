@@ -32,7 +32,8 @@ public class BehaviorMain {
 		Behavior bEdgeAvoid = new BehaviorAvoidEdge(pilot, ir);
 		//Behavior b2 = new BehaviorProximity(left, right, ir);
 		//Behavior b3 = new BehaviorTouch(left, right, tch);
-		//Behavior b4 = new BehaviorSenseEdge(left, right, clr);
+		//Behavior b4 = new BehaviorTurnLeft(pilot, clr);
+		//Behavior b5 = new BehaviorTurnRight(pilot, clr); 
 		Behavior die = new BehaviorDie();
 		
 		Behavior[] behave = {bForward, bEdgeAvoid, die};
@@ -44,11 +45,12 @@ public class BehaviorMain {
 class SharedColorSensor extends Thread {
 	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S3);
 	SampleProvider sp = clr.getRedMode();
-	public float normal = .4F;
-	boolean edge;
+	public float normal = .5F;
+	boolean distLow, distHigh;
 	
 	SharedColorSensor() {
-		this.edge = false;
+		this.distLow = false;
+		this.distHigh = false; 
 		this.setDaemon(true);
 		this.start();
 	}
@@ -56,11 +58,11 @@ class SharedColorSensor extends Thread {
 	public void run() {
 		float[] sample = new float[sp.sampleSize()];
 		sp.fetchSample(sample, 0);
-		if(sample[0] < normal)
-			edge = true;
-		else
-			edge = false;
-		LCD.drawString("on edge: " + edge + " ", 0, 2); //for debugging later
+		if(sample[0] < normal + .05)
+			distLow = true;
+		else if(sample[0] > normal - .05)
+			distHigh = true;
+		LCD.drawString("on edge: " + sample[0] + " ", 0, 2); //for debugging later
 		Thread.yield();
 	}
 }

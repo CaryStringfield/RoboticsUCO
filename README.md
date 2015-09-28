@@ -4,6 +4,6 @@ Java code for an EV3 robot for Robtics class at UCO
 For Behavior Programming Ref: http://www.lejos.org/nxt/nxj/tutorial/Behaviors/BehaviorProgramming.htm
 
 TODO LIST:
- 1. Make Java Files for each Sensor (test whether to have a thread for each sensor or one thread for all sensor)
- 2. Make changes to try and get to as close to 90 degrees as possible
- 3. Move the RoundTheTable java class to the Behavior Programming Lejos API
+  1. Use color sensor to stay on the table
+  2. Color value is low then to adjust to left (away from edge)
+  3. Color value is high then to adjust to right (toward edge)

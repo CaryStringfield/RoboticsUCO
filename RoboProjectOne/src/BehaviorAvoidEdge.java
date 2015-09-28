@@ -4,7 +4,7 @@ public class BehaviorAvoidEdge implements Behavior {
 	private SharedIRSensor ir;
 	private SharedDifferentialPilot sharedPilot;
 	
-	private int edgeThreshold = 3;
+	private int edgeThreshold = 5;
 	private int backoffDistance = -20;
 	
 	public BehaviorAvoidEdge(SharedDifferentialPilot sharedPilot, SharedIRSensor ir){
@@ -23,6 +23,7 @@ public class BehaviorAvoidEdge implements Behavior {
 		sharedPilot.robot.stop();
 		sharedPilot.robot.travel(backoffDistance);
 		sharedPilot.robot.rotate(90);
+		sharedPilot.robot.stop();
 	}
 
 	@Override

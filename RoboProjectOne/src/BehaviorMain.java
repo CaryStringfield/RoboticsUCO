@@ -68,7 +68,6 @@ class SharedColorSensor extends Thread {
 class SharedIRSensor extends Thread {
 	EV3IRSensor ir = new EV3IRSensor(SensorPort.S1);
 	SampleProvider sp = ir.getDistanceMode();
-	public int control = 0;
 	public int distance = 255;
 	
 	SharedIRSensor() {
@@ -79,14 +78,9 @@ class SharedIRSensor extends Thread {
 	public void run() {
 		while (true) {
 			float[] sample = new float[sp.sampleSize()];
-			control = ir.getRemoteCommand(0);
 			sp.fetchSample(sample, 0);
-			if((int)sample[0] == 0)
-				distance = 255;
-			else
-				distance = (int)sample[0];
-			LCD.drawString("Control: " + control, 0, 0);
-			LCD.drawString("Distance: " + distance + " ", 0, 1);
+			distance = (int)sample[0];
+			//LCD.drawString("Distance: " + distance + " ", 0, 0);
 			Thread.yield();
 		}
 	}
@@ -119,8 +113,8 @@ class SharedTouchSensor extends Thread {
 class SharedDifferentialPilot extends Thread{
 	private double diam = DifferentialPilot.WHEEL_SIZE_EV3;
 	private double trackwidth = 14.5;
-	private float travelSpeed = 10;
-	private float rotateSpeed = 20;
+	private float travelSpeed =10;
+	private float rotateSpeed = 50;
 	
 	// Motors on ports B and C
 	public DifferentialPilot robot = new DifferentialPilot(diam, trackwidth, Motor.B, Motor.C);

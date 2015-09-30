@@ -26,17 +26,17 @@ public class BehaviorMain {
 		//RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
 		SharedIRSensor ir = new SharedIRSensor();
 		//SharedTouchSensor tch = new SharedTouchSensor();
-		//SharedColorSensor clr = new SharedColorSensor();
+		SharedColorSensor clr = new SharedColorSensor();
 		
 		Behavior bForward = new BehaviorForward(pilot);
 		Behavior bEdgeAvoid = new BehaviorAvoidEdge(pilot, ir);
 		//Behavior b2 = new BehaviorProximity(left, right, ir);
 		//Behavior b3 = new BehaviorTouch(left, right, tch);
-		//Behavior b4 = new BehaviorTurnLeft(pilot, clr);
-		//Behavior b5 = new BehaviorTurnRight(pilot, clr); 
+		Behavior bTurnLeft = new BehaviorTurnLeft(pilot, clr);
+		Behavior bTurnRight = new BehaviorTurnRight(pilot, clr); 
 		Behavior die = new BehaviorDie();
 		
-		Behavior[] behave = {bForward, bEdgeAvoid, die};
+		Behavior[] behave = {bForward, bTurnRight, bEdgeAvoid, die};
 		arby = new Arbitrator(behave);
 		arby.start();		
 	}
@@ -45,7 +45,8 @@ public class BehaviorMain {
 class SharedColorSensor extends Thread {
 	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S3);
 	SampleProvider sp = clr.getRedMode();
-	public float normal = .5F;
+	public float normal = .1f;
+	public float tolerance = .01f;
 	boolean distLow, distHigh;
 	
 	SharedColorSensor() {
@@ -58,11 +59,17 @@ class SharedColorSensor extends Thread {
 	public void run() {
 		float[] sample = new float[sp.sampleSize()];
 		sp.fetchSample(sample, 0);
-		if(sample[0] < normal + .05)
+		if(sample[0] < normal - tolerance){
 			distLow = true;
-		else if(sample[0] > normal - .05)
+			distHigh=false;
+		}else if(sample[0] > normal + tolerance){
 			distHigh = true;
-		LCD.drawString("on edge: " + sample[0] + " ", 0, 2); //for debugging later
+			distLow = false;
+		}else{
+			distLow = false;
+			distHigh= false;
+		}
+		//LCD.drawString("on edge: " + sample[0] + " ", 0, 2); //for debugging later
 		Thread.yield();
 	}
 }

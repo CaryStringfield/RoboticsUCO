@@ -6,6 +6,7 @@ public class BehaviorTurnLeft implements Behavior {
 	private SharedDifferentialPilot sharedPilot;
 	private SharedColorSensor sharedColor;
 	boolean turn_left = false ;
+	private int correction = 20;
 
 	public  BehaviorTurnLeft(SharedDifferentialPilot pilot, SharedColorSensor clrs) {
 		this.sharedPilot = pilot;
@@ -14,22 +15,26 @@ public class BehaviorTurnLeft implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return (sharedColor.distHigh == true);		
+		// dist low means that sensor is farther off table, needs to turn away
+		return (sharedColor.distLow == true);		
 	}	
 
 	@Override
 	public void action() {
 		turn_left = true;
 		
-		//this could work for a forward moving turning mechanic
-		sharedPilot.robot.steer(20);
-
-		turn_left = false;
+		boolean temp = false;
+		while (turn_left){
+			//this could work for a forward moving turning mechanic
+			if (!temp){
+				sharedPilot.robot.steer(correction);
+				temp = true;
+			}
+		}
 	}
 
 	@Override
 	public void suppress() {
-		while(turn_left)
-			Thread.yield();
+		turn_left = false;
 	}
 }

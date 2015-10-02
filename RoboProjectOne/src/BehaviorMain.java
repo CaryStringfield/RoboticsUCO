@@ -33,10 +33,11 @@ public class BehaviorMain {
 		//Behavior b2 = new BehaviorProximity(left, right, ir);
 		//Behavior b3 = new BehaviorTouch(left, right, tch);
 		Behavior bTurnLeft = new BehaviorTurnLeft(pilot, clr);
-		Behavior bTurnRight = new BehaviorTurnRight(pilot, clr); 
+		Behavior bTurnRight = new BehaviorTurnRight(pilot, clr);
+		Behavior bSteer = new BehaviorSteer(pilot, clr); 
 		Behavior die = new BehaviorDie();
 		
-		Behavior[] behave = {bForward, bTurnRight, bTurnLeft, bEdgeAvoid, die};
+		Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
 		arby = new Arbitrator(behave);
 		arby.start();	
 	}

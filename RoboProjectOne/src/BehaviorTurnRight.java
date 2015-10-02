@@ -25,12 +25,13 @@ public class BehaviorTurnRight implements Behavior {
 		turn_right = true;
 		
 		boolean temp = false;
-		while (turn_right && sharedColor.distHigh){
+		while (turn_right){
 			//this could work for a forward moving turning mechanic
 			if (!temp){
 				sharedPilot.robot.steer(correction);
 				temp = true;
 			}
+			Thread.yield();
 		}
 	}
 
@@ -39,7 +40,6 @@ public class BehaviorTurnRight implements Behavior {
 
 		LCD.drawString("RIGHT suppress", 0, 5); //for debugging later
 		turn_right = false;
-		//sharedPilot.robot.steer(0);
 		sharedPilot.robot.stop();
 	}
 }

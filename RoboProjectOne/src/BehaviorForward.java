@@ -16,14 +16,14 @@ import lejos.robotics.subsumption.Behavior;
 		
 		public void action() {
 			moving = true;
-			//if (moving == false){
+			
 			boolean temp = false;
 			while(moving){
-				if (temp == false){
+				if (!temp){
 					sharedPilot.robot.forward();
 					temp = true;
 				}
-				//moving = true;
+				Thread.yield();
 			}
 		}
 		 

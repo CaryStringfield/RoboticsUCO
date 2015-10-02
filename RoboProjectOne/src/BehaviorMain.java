@@ -38,15 +38,15 @@ public class BehaviorMain {
 		
 		Behavior[] behave = {bForward, bTurnRight, bTurnLeft, bEdgeAvoid, die};
 		arby = new Arbitrator(behave);
-		arby.start();		
+		arby.start();	
 	}
 }
 
 class SharedColorSensor extends Thread {
 	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S3);
 	SampleProvider sp = clr.getRedMode();
-	public float normal = .1f;
-	public float tolerance = .01f;
+	public float normal = .15f;
+	public float tolerance = .03f;
 	boolean distLow, distHigh;
 	
 	SharedColorSensor() {
@@ -70,7 +70,7 @@ class SharedColorSensor extends Thread {
 				distLow = false;
 				distHigh= false;
 			}
-			LCD.drawString("sample: " + (int)sample[0] + " ", 0, 0); //for debugging later
+			LCD.drawString("sample: " + sample[0] + " ", 0, 0); //for debugging later
 			LCD.drawString("distLow: " + distLow + " ", 0, 1); //for debugging later
 			LCD.drawString("distHigh: " + distHigh + " ", 0, 2); //for debugging later
 			LCD.drawString("normal: " + normal + " ", 0, 3); //for debugging later

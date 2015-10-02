@@ -1,3 +1,4 @@
+import lejos.hardware.lcd.LCD;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.subsumption.*;
 
@@ -16,7 +17,7 @@ public class BehaviorTurnLeft implements Behavior {
 	@Override
 	public boolean takeControl() {
 		// dist low means that sensor is farther off table, needs to turn away
-		return (sharedColor.distLow == true);		
+		return (sharedColor.distLow && !sharedColor.distHigh);		
 	}	
 
 	@Override
@@ -24,7 +25,7 @@ public class BehaviorTurnLeft implements Behavior {
 		turn_left = true;
 		
 		boolean temp = false;
-		while (turn_left){
+		while (turn_left && sharedColor.distLow){
 			//this could work for a forward moving turning mechanic
 			if (!temp){
 				sharedPilot.robot.steer(correction);
@@ -35,6 +36,10 @@ public class BehaviorTurnLeft implements Behavior {
 
 	@Override
 	public void suppress() {
+
+		LCD.drawString("LEFT suppress", 0, 5); //for debugging later
 		turn_left = false;
+		//sharedPilot.robot.steer(0);
+		sharedPilot.robot.stop();
 	}
 }

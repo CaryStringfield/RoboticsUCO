@@ -36,7 +36,7 @@ public class BehaviorMain {
 		Behavior bTurnRight = new BehaviorTurnRight(pilot, clr); 
 		Behavior die = new BehaviorDie();
 		
-		Behavior[] behave = {bForward, bTurnRight, bEdgeAvoid, die};
+		Behavior[] behave = {bForward, bTurnRight, bTurnLeft, bEdgeAvoid, die};
 		arby = new Arbitrator(behave);
 		arby.start();		
 	}
@@ -57,20 +57,26 @@ class SharedColorSensor extends Thread {
 	}
 	
 	public void run() {
-		float[] sample = new float[sp.sampleSize()];
-		sp.fetchSample(sample, 0);
-		if(sample[0] < normal - tolerance){
-			distLow = true;
-			distHigh=false;
-		}else if(sample[0] > normal + tolerance){
-			distHigh = true;
-			distLow = false;
-		}else{
-			distLow = false;
-			distHigh= false;
+		while(true){
+			float[] sample = new float[sp.sampleSize()];
+			sp.fetchSample(sample, 0);
+			if(sample[0] < normal - tolerance){
+				distLow = true;
+				distHigh=false;
+			}else if(sample[0] > normal + tolerance){
+				distHigh = true;
+				distLow = false;
+			}else{
+				distLow = false;
+				distHigh= false;
+			}
+			LCD.drawString("sample: " + (int)sample[0] + " ", 0, 0); //for debugging later
+			LCD.drawString("distLow: " + distLow + " ", 0, 1); //for debugging later
+			LCD.drawString("distHigh: " + distHigh + " ", 0, 2); //for debugging later
+			LCD.drawString("normal: " + normal + " ", 0, 3); //for debugging later
+			LCD.drawString("tolerance: +-" + tolerance + " ", 0, 4); //for debugging later
+			Thread.yield();
 		}
-		//LCD.drawString("on edge: " + sample[0] + " ", 0, 2); //for debugging later
-		Thread.yield();
 	}
 }
 

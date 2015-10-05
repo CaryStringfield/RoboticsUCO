@@ -19,6 +19,7 @@ public class BehaviorSteer implements Behavior {
 		// distHigh means sensor is more on the table, so need to turn toward edge
 		return (sharedColor.distHigh || sharedColor.distLow);		
 	}	
+	
     // test test
 	@Override
 	public void action() {

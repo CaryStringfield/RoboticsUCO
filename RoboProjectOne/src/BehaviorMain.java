@@ -76,6 +76,7 @@ class SharedColorSensor extends Thread {
 			LCD.drawString("distHigh: " + distHigh + " ", 0, 2); //for debugging later
 			LCD.drawString("normal: " + normal + " ", 0, 3); //for debugging later
 			LCD.drawString("tolerance: +-" + tolerance + " ", 0, 4); //for debugging later
+			LCD.drawString("sample size: " + sample.length, 0, 5);
 			Thread.yield();
 		}
 	}

@@ -5,7 +5,7 @@ public class BehaviorAvoidEdge implements Behavior {
 	private SharedDifferentialPilot sharedPilot;
 	
 	private int edgeThreshold = 5;
-	private int backoffDistance = -20;
+	private int backoffDistance = -10;
 	
 	public BehaviorAvoidEdge(SharedDifferentialPilot sharedPilot, SharedIRSensor ir){
 		this.ir = ir;

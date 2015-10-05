@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.Motor;
@@ -48,19 +51,31 @@ class SharedColorSensor extends Thread {
 	SampleProvider sp = clr.getRedMode();
 	public float normal = .15f;
 	public float tolerance = .03f;
-	boolean distLow, distHigh;
+	boolean distLow, distHigh, angleSteep, angleShort;
+	List<Float> testList = new ArrayList<Float>(); //holds move data
 	
 	SharedColorSensor() {
+		this.testList.clear();
 		this.distLow = false;
-		this.distHigh = false; 
+		this.distHigh = false;
+		this.angleSteep = false;
+		this.angleShort = true;
 		this.setDaemon(true);
 		this.start();
 	}
 	
 	public void run() {
-		while(true){
+		while(true){			
 			float[] sample = new float[sp.sampleSize()];
 			sp.fetchSample(sample, 0);
+			//-----------------------------------------------------
+			//add last reading		
+			testList.add((Float)sample[0]);
+			//maintain the list at 16 elements
+			if (testList.size() > 16)
+				testList.remove(testList.size() - 1);
+			float sampleDifference_2 = testList.get(9) - testList.get(5);
+			//-----------------------------------------------------			
 			if(sample[0] < normal - tolerance){
 				distLow = true;
 				distHigh=false;
@@ -76,7 +91,8 @@ class SharedColorSensor extends Thread {
 			LCD.drawString("distHigh: " + distHigh + " ", 0, 2); //for debugging later
 			LCD.drawString("normal: " + normal + " ", 0, 3); //for debugging later
 			LCD.drawString("tolerance: +-" + tolerance + " ", 0, 4); //for debugging later
-			LCD.drawString("sample size: " + sample.length, 0, 5);
+			LCD.drawString("sample size: " + sample.length, 0, 5); //sample size debugging
+			LCD.drawString(testList.get(0) + " " + testList.get(1) + " " + testList.get(2) + " " + testList.get(3) + " " + testList.get(4) + " " + testList.get(5), 0 , 6);
 			Thread.yield();
 		}
 	}

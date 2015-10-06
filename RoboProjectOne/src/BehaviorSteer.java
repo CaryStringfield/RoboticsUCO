@@ -20,7 +20,6 @@ public class BehaviorSteer implements Behavior {
 		return (sharedColor.distHigh || sharedColor.distLow);		
 	}	
 	
-    // test test
 	@Override
 	public void action() {
 		turning = true;
@@ -28,14 +27,28 @@ public class BehaviorSteer implements Behavior {
 		boolean temp = false;
 		boolean isLeft = true;
 		while (turning){
-			//this could work for a forward moving turning mechanic
+			
 			if (!temp){
 				sharedPilot.robot.stop();
 				if (sharedColor.distHigh)
 					sharedPilot.robot.steer(-correction);
-				else if(sharedColor.distLow)
+				//-----------------------------------------------
+				//take the third boolean variable into account
+				//-----------------------------------------------
+				else if(sharedColor.distLow) {
+					if(sharedColor.angleSteep) {
+						sharedPilot.robot.stop();
+						sharedPilot.robot.travel(-10);
+						sharedPilot.robot.rotate(45);					
+						sharedPilot.robot.forward();
+					}
+					else
+						sharedPilot.robot.steer(correction);
+				}					
+				//-----------------------------------------------
+				/*else if(sharedColor.distLow)
 					sharedPilot.robot.steer(correction);
-						
+				 */	
 				temp = true;
 			}
 			

@@ -51,21 +51,22 @@ class SharedColorSensor extends Thread {
 	SampleProvider sp = clr.getRedMode();
 	public float normal = .15f;
 	public float tolerance = .03f;
-	boolean distLow, distHigh, angleSteep, angleShort;
+	public float angleTolerance = .01f;
+	boolean distLow, distHigh, angleSteep;
+	public float max, mid, min = 0f;
 	List<Float> testList = new ArrayList<Float>(); //holds move data
 	
 	SharedColorSensor() {
 		this.testList.clear();
 		this.distLow = false;
 		this.distHigh = false;
-		this.angleSteep = false;
-		this.angleShort = true;
+		this.angleSteep = false;		
 		this.setDaemon(true);
 		this.start();
 	}
 	
 	public void run() {
-		while(true){			
+		while(true){					
 			float[] sample = new float[sp.sampleSize()];
 			sp.fetchSample(sample, 0);
 			//-----------------------------------------------------
@@ -73,13 +74,37 @@ class SharedColorSensor extends Thread {
 			testList.add((Float)sample[0]);
 			//maintain the list at 16 elements
 			if (testList.size() > 16)
-				testList.remove(testList.size() - 1);
-			float sampleDifference_2 = testList.get(9) - testList.get(5);
-			//-----------------------------------------------------			
-			if(sample[0] < normal - tolerance){
+				testList.remove(testList.size() - 1);			
+			/*if(sample[0] < normal - tolerance){
 				distLow = true;
 				distHigh=false;
-			}else if(sample[0] > normal + tolerance){
+			}*/
+			//-----------------------------------------------------			
+			//only need to worry about angle going toward the edge, to decrease time complexity
+			// only care about data on every n^2 index
+			//-----------------------------------------------------
+			max = testList.get(testList.size() - 1);
+			mid = max / 2;
+			
+			if(sample[0] < normal - tolerance){
+				
+				try {
+				//checks if the value in spot 4 reads within mid +/- angle tolerance, 
+				//checks if the value in spot 2 is definitely off the table (<min + angle tolerance),
+				//checks if the value in spot 8 is definitely on the table (>max + angle tolerance).
+				//Hopefully this will accurately detect when the angle is steep and it needs to back up.
+				if (testList.get(3) > mid - angleTolerance && testList.get(3) < mid + angleTolerance 
+						&& testList.get(1) <= min + angleTolerance && testList.get(7) >= max - angleTolerance)
+					angleSteep = true;				
+				}catch(Exception e) {
+					LCD.drawString("error in edge detect", 0, 8); //for debugging later
+				}
+				//otherwise just treat the edge as normal
+				distLow = true;
+				distHigh = false;
+				}
+			//-----------------------------------------------------
+			else if(sample[0] > normal + tolerance){
 				distHigh = true;
 				distLow = false;
 			}else{
@@ -92,7 +117,8 @@ class SharedColorSensor extends Thread {
 			LCD.drawString("normal: " + normal + " ", 0, 3); //for debugging later
 			LCD.drawString("tolerance: +-" + tolerance + " ", 0, 4); //for debugging later
 			LCD.drawString("sample size: " + sample.length, 0, 5); //sample size debugging
-			LCD.drawString(testList.get(0) + " " + testList.get(1) + " " + testList.get(2) + " " + testList.get(3) + " " + testList.get(4) + " " + testList.get(5), 0 , 6);
+			LCD.drawString(testList.get(0) + " " + testList.get(1) + " " + testList.get(2) + " " + testList.get(3) + " " + testList.get(4) + " " + testList.get(5), 0 , 6); // linear data
+			LCD.drawString(testList.get(1) + " " + testList.get(2) + " " + testList.get(4) + " " + testList.get(8) + " " + testList.get(16), 0 , 7); // n^2 data
 			Thread.yield();
 		}
 	}

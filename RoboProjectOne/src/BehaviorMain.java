@@ -71,7 +71,7 @@ class SharedColorSensor extends Thread {
 			sp.fetchSample(sample, 0);
 			//-----------------------------------------------------
 			//add last reading		
-			testList.add((Float)sample[0]);
+			testList.add(0, (Float)sample[0]);
 			//maintain the list at 16 elements
 			if (testList.size() > 16)
 				testList.remove(testList.size() - 1);			

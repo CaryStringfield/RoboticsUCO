@@ -38,7 +38,8 @@ public class BehaviorMain {
 		Behavior bTurnLeft = new BehaviorTurnLeft(pilot, clr);
 		Behavior bTurnRight = new BehaviorTurnRight(pilot, clr);
 		//Behavior bSteer = new BehaviorSteer(pilot, clr); 
-		Behavior bSteer = new BehaviorSteer2(pilot, clr);
+		//Behavior bSteer = new BehaviorSteer2(pilot, clr);
+		Behavior bSteer = new BehaviorSteer3(pilot, clr);
 		Behavior die = new BehaviorDie();
 		
 		Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};

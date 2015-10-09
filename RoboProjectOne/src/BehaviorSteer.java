@@ -1,5 +1,3 @@
-import lejos.hardware.lcd.LCD;
-import lejos.robotics.RegulatedMotor;
 import lejos.robotics.subsumption.*;
 
 public class BehaviorSteer implements Behavior {
@@ -8,6 +6,7 @@ public class BehaviorSteer implements Behavior {
 	private SharedColorSensor sharedColor;
 	private boolean turning = false ;
 	private int correction = 20;
+	private int maxrot = 3;
 
 	public  BehaviorSteer(SharedDifferentialPilot pilot, SharedColorSensor clrs) {
 		this.sharedPilot = pilot;
@@ -36,14 +35,16 @@ public class BehaviorSteer implements Behavior {
 				//take the third boolean variable into account
 				//-----------------------------------------------
 				else if(sharedColor.distLow) {
-					if(sharedColor.angleSteep) {
+					if (maxrot > 0){
 						sharedPilot.robot.stop();
-						sharedPilot.robot.travel(-10);
-						sharedPilot.robot.rotate(45);					
+						sharedPilot.robot.travel(-5);
+						sharedPilot.robot.rotate(15);					
 						sharedPilot.robot.forward();
-					}
-					else
+						maxrot--;
+					}else {
 						sharedPilot.robot.steer(correction);
+					}
+						
 				}					
 				//-----------------------------------------------
 				/*else if(sharedColor.distLow)

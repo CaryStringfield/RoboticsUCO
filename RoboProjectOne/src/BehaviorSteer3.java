@@ -2,14 +2,14 @@ import lejos.hardware.lcd.LCD;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.subsumption.*;
 
-public class BehaviorSteer implements Behavior {
+public class BehaviorSteer3 implements Behavior {
 	
 	private SharedDifferentialPilot sharedPilot;
 	private SharedColorSensor sharedColor;
 	private boolean turning = false ;
 	private int correction = 20;
 
-	public  BehaviorSteer(SharedDifferentialPilot pilot, SharedColorSensor clrs) {
+	public  BehaviorSteer3(SharedDifferentialPilot pilot, SharedColorSensor clrs) {
 		this.sharedPilot = pilot;
 		this.sharedColor = clrs;
 	}

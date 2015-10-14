@@ -5,22 +5,22 @@ public class BehaviorDie implements Behavior{
 
 	@Override
 	public boolean takeControl() {
-		// TODO Auto-generated method stub
+		// the escape button on the robot is pressed
 		return Button.ESCAPE.isDown();
 	}
 
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
+		// inform the user the robot is stopping
 		System.out.println("Stopping...");
+		// wait for another button press
 		Button.waitForAnyPress();
+		// shutdown the program
 		System.exit(1);
 	}
 
 	@Override
 	public void suppress() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

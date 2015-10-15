@@ -2,6 +2,8 @@
 /* 
  * Whith IR facing down should move around the table
  * 
+ * This was a non-behavioral test to see how the robot could move about a table.
+ * It was adapted and used in the behavioral approach.
  */
 
 import lejos.hardware.*;

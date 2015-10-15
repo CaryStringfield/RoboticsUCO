@@ -14,6 +14,7 @@ public class BehaviorMain {
 	static Arbitrator arby;
 	
 	// main method called on start-up
+	// defines behaviors and sensors
 	public static void main (String[] args) {
 		// used so motor control can be shared between behaviors
 		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
@@ -40,13 +41,15 @@ public class BehaviorMain {
 class SharedColorSensor extends Thread {
 	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S3);
 	SampleProvider sp = clr.getRedMode();
-	// this is the desired value to be read from the sensor
+	// This is the desired value to be read from the sensor. The values will
+	// vary based upon the table color. This is where we calibrate the sensor.
 	public float normal = .1f;
 	// this is the +-error from the normal that is allowed to be read
 	public float tolerance = .03f;
 	// whether the read value is high or low
 	boolean distLow, distHigh;
 	
+	// the sensor is initialized to false and thread is started
 	SharedColorSensor() {
 		this.distLow = false;
 		this.distHigh = false;
@@ -89,9 +92,11 @@ class SharedColorSensor extends Thread {
 
 class SharedIRSensor extends Thread {
 	EV3IRSensor ir = new EV3IRSensor(SensorPort.S1);
+	// sets the IR sensor to the distance mode which return the distance from an object
 	SampleProvider sp = ir.getDistanceMode();
 	public int distance = 255;
 	
+	//thread is started
 	SharedIRSensor() {
 		this.setDaemon(true);
 		this.start();
@@ -110,9 +115,13 @@ class SharedIRSensor extends Thread {
 }
 
 class SharedDifferentialPilot extends Thread{
+	// diameter of the wheels
 	private double diam = DifferentialPilot.WHEEL_SIZE_EV3;
+	// width of distance between wheels
 	private double trackwidth = 14.5;
+	// forward speed
 	private float travelSpeed = 10;
+	// turn speed
 	private float rotateSpeed = 50;
 	
 	// Motors on ports B and C (left and right respectively)

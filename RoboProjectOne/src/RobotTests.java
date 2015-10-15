@@ -8,7 +8,10 @@ import lejos.robotics.filter.MeanFilter;
 import lejos.hardware.port.*;
 import lejos.utility.Delay;
 
-
+/*
+ * This was created to test the different kind of sensors to see how to use them
+ * as well as to see what kind of data they would return.
+ */
 public class RobotTests {
 
 	public static void main(String[] args) {

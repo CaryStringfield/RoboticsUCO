@@ -8,7 +8,7 @@ public class BehaviorForward implements Behavior {
 	public BehaviorForward(SharedDifferentialPilot sharedPilot) {
 		this.sharedPilot = sharedPilot;
 	}
-		
+		// behavior should take control if no other behavior is triggered
 	public boolean takeControl() {
 		return true;
 	}

@@ -10,6 +10,7 @@ public class BehaviorSteer implements Behavior {
 	// the number of times to perform the edge alignment movements
 	private int maxrot = 3;
 
+	//constructor to initialize sensor and motor
 	public  BehaviorSteer(SharedDifferentialPilot pilot, SharedColorSensor clrs) {
 		this.sharedPilot = pilot;
 		this.sharedColor = clrs;
@@ -19,6 +20,7 @@ public class BehaviorSteer implements Behavior {
 	public boolean takeControl() {
 		// distHigh means sensor is more on the table, so need to turn toward edge
 		// distLow means sensor is more off the table, so need to turn away from edge
+		// take control when either it true
 		return (sharedColor.distHigh || sharedColor.distLow);		
 	}	
 	

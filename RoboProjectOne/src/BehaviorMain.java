@@ -1,5 +1,7 @@
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
+import lejos.hardware.port.I2CPort;
+import lejos.hardware.port.Port;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3IRSensor;
@@ -23,7 +25,7 @@ public class BehaviorMain {
 		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
 		// used so multiple behaviors can read from the IR and Color sensors
 		SharedIRSensor ir = new SharedIRSensor();
-        SharedUltraSonicSensor us = new SharedUltraSonicSensor();
+        SharedUltraSonicSensor us = new SharedUltraSonicSensor(SensorPort.S4);
 		SharedColorSensor clr = new SharedColorSensor();
 		
 		// default behavior, robot simply drives forward
@@ -99,49 +101,81 @@ class SharedIRSensor extends Thread {
 	// sets the IR sensor to the distance mode which return the distance from an object
 	SampleProvider sp = ir.getDistanceMode();
 	public int distance = 255;
+	public int bearing = 255;
 	String mode; //holds mode state
 	
 	//thread is started
 	SharedIRSensor() {
-		this.mode = "distance"; //default to distance mode
+		this.setDistance(); //default to distance mode
 		this.setDaemon(true);
 		this.start();
 	}
 	
 	public void run() {
-		//change the ir mode based on what is needed at the time
-		if(this.mode == "seek")
-			sp = ir.getSeekMode();
-		else
-			sp = ir.getDistanceMode();
-		
 		while (true) {
 			// retrieve sample
 			float[] sample = new float[sp.sampleSize()];
 			sp.fetchSample(sample, 0);
-			// store sample for use by Behaviors
-			distance = (int)sample[0];
+			if (mode.equals("seek")){
+				bearing = (int)sample[0];
+				distance = (int)sample[1];
+			}else{
+				// store sample for use by Behaviors
+				distance = (int)sample[0];
+			}
 			Thread.yield();
 		}		
 	}
 	
 	public void setSeek() {
 		this.mode = "seek";
+		sp = ir.getSeekMode();
 	}
 	
 	public void setDistance() {
 		this.mode = "distance";
+		sp = ir.getDistanceMode();
+	}
+	
+	public void tmpSeek(){
+		if (mode == "seek"){
+			float[] sample = new float[sp.sampleSize()];
+			sp.fetchSample(sample, 0);
+			bearing = (int)sample[0];
+			distance = (int)sample[1];
+		}else{
+			sp = ir.getSeekMode();
+			float[] sample = new float[sp.sampleSize()];
+			sp.fetchSample(sample, 0);
+			bearing = (int)sample[0];
+			distance = (int)sample[1];
+			sp = ir.getDistanceMode();
+		}
+	}
+	public void tmpDist(){
+		if (mode == "seek"){
+			sp = ir.getDistanceMode();
+			float[] sample = new float[sp.sampleSize()];
+			sp.fetchSample(sample, 0);
+			distance = (int)sample[0];
+			sp = ir.getSeekMode();
+		}else{
+			float[] sample = new float[sp.sampleSize()];
+			sp.fetchSample(sample, 0);
+			distance = (int)sample[0];
+		}
 	}
 }
 
 class SharedUltraSonicSensor extends Thread {	
-    NXTUltrasonicSensor us = new NXTUltrasonicSensor(SensorPort.S4);
+    NXTUltrasonicSensor us;
     // sets the IR sensor to the distance mode which return the distance from an object
     SampleProvider sp = us.getDistanceMode();
     public int distance = 255;
     
     //thread is started
-    SharedUltraSonicSensor() {
+    SharedUltraSonicSensor(Port p) {
+    	this.us = new NXTUltrasonicSensor(p);
         this.setDaemon(true);
         this.start();
     }

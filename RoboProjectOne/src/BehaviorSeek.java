@@ -28,7 +28,7 @@ public class BehaviorSeek implements Behavior {
 	@Override
 	public boolean takeControl() {
 		//set to seek mode
-		this.ir.setSeek();
+		this.ir.tmpSeek();
 		
 		// take control
 		return (looking);
@@ -36,6 +36,7 @@ public class BehaviorSeek implements Behavior {
 
 	@Override
 	public void action() {
+		ir.setSeek();
 		// look for beacon
 		Delay.msDelay(50);
 		

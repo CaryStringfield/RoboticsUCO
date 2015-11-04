@@ -19,9 +19,7 @@ import lejos.robotics.subsumption.*;
 		
 		//if the distance is below 40 cm then the thread takes control
 		public boolean takeControl() {
-			//set to distance mode
-			this.ir.setDistance();
-			
+			ir.tmpDist();
 			return (ir.distance < 40);
 		}
 		

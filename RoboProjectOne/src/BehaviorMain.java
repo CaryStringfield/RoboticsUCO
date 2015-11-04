@@ -9,6 +9,7 @@ import lejos.robotics.SampleProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
+import lejos.hardware.sensor.NXTUltrasonicSensor;
 
 // Main Class that starts up the sensors and contains the Arbitrator
 public class BehaviorMain {
@@ -117,8 +118,8 @@ class SharedIRSensor extends Thread {
 	}
 }
 
-class SharedUltraSonicSensor extends Thread {
-    NXTUltraSonicSensor us = new NXTUltraSonicSensor(SensorPort.S4);
+class SharedUltraSonicSensor extends Thread {	
+    NXTUltrasonicSensor us = new NXTUltrasonicSensor(SensorPort.S4);
     // sets the IR sensor to the distance mode which return the distance from an object
     SampleProvider sp = us.getDistanceMode();
     public int distance = 255;

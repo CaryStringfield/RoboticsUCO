@@ -29,30 +29,51 @@ public class RobotTests {
 		//stopAtEdgeTest(MotorPort.B, MotorPort.C, SensorPort.S1, 3.0);
 
 		// Test Odometry
-		System.out.println("Odometry Test");
+		System.out.println("Calibrate Test");
 		Button.waitForAnyPress();
 		
-		// wheel diameter
-		double wheelDiameter = DifferentialPilot.WHEEL_SIZE_EV3;
-		// width between sides, I think?
-		double width = 14.5;
+		//EV3MediumRegulatedMotor motor = new EV3MediumRegulatedMotor(MotorPort.D);
 		
+		// close the claw
+		//motor.rotate(-2000);
+		// open the claw
+		//motor.rotate(2000);
+
+		
+		//motor.stop();
+		//motor.close();
+		
+		// wheel diameter
+		//double wheelDiameter = DifferentialPilot.WHEEL_SIZE_EV3;
+		// width between sides, I think?
+		//double width = 14.5;
+		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
+		pilot.robot.setRotateSpeed(10);
+		
+		HiTechnicCompass compass = new HiTechnicCompass(SensorPort.S2);
+		compass.startCalibration();
+		
+		pilot.robot.rotate(720);
+		
+		compass.stopCalibration();
+		compass.close();
 		// used for making 'precise' movements with robot
-		DifferentialPilot robot = new DifferentialPilot(wheelDiameter,width,Motor.C,Motor.B);
-		OdometryPoseProvider pp = new OdometryPoseProvider(robot);
+		//DifferentialPilot robot = new DifferentialPilot(wheelDiameter,width,Motor.C,Motor.B);
+		//OdometryPoseProvider pp = new OdometryPoseProvider(robot);
 
 		// start position
-		System.out.println("Start: " + pp.getPose());
+		//System.out.println("Start: " + pp.getPose());
 		//Button.waitForAnyPress();
 		
 		// performs various super cool tricks
-		robot.rotate(90);
-		robot.travel(20);
-		robot.travel(-20);
-		robot.rotate(-90);
+		//robot.rotate(90);
+		//robot.travel(20);
+		//robot.travel(-20);
+		//robot.rotate(-90);
 		
 		// end position
-		System.out.println("End: " + pp.getPose());
+
+		System.out.println("End...");// + pp.getPose());
 		Button.waitForAnyPress();
 		
 	}

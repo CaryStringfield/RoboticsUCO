@@ -3,6 +3,8 @@ import lejos.hardware.motor.Motor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3IRSensor;
+import lejos.hardware.sensor.NXTUltrasonicSensor;
+import lejos.hardware.sensor.HiTechnicCompass;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Arbitrator;
@@ -20,6 +22,7 @@ public class BehaviorMain {
 		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
 		// used so multiple behaviors can read from the IR and Color sensors
 		SharedIRSensor ir = new SharedIRSensor();
+        SharedUltraSonicSensor us = new SharedUltraSonicSensor();
 		SharedColorSensor clr = new SharedColorSensor();
 		
 		// default behavior, robot simply drives forward
@@ -114,6 +117,53 @@ class SharedIRSensor extends Thread {
 	}
 }
 
+class SharedUltraSonicSensor extends Thread {
+    NXTUltraSonicSensor us = new NXTUltraSonicSensor(SensorPort.S4);
+    // sets the IR sensor to the distance mode which return the distance from an object
+    SampleProvider sp = us.getDistanceMode();
+    public int distance = 255;
+    
+    //thread is started
+    SharedUltraSonicSensor() {
+        this.setDaemon(true);
+        this.start();
+    }
+    
+    public void run() {
+        while (true) {
+            // retrieve sample
+            float[] sample = new float[sp.sampleSize()];
+            sp.fetchSample(sample, 0);
+            // store sample for use by Behaviors
+            distance = (int)sample[0];
+            Thread.yield();
+        }
+    }
+}
+
+class SharedCompass extends Thread {
+	HiTechnicCompass compass = new HiTechnicCompass(SensorPort.S2);
+	// sets the IR sensor to the distance mode which return the distance from an object
+	SampleProvider sp = compass.getAngleMode();
+	public int bearing = 255;
+	
+	//thread is started
+	SharedCompass() {
+		this.setDaemon(true);
+		this.start();
+	}
+	
+	public void run() {
+		while (true) {
+			// retrieve sample
+			float[] sample = new float[sp.sampleSize()];
+			sp.fetchSample(sample, 0);
+			// store sample for use by Behaviors
+			bearing = (int)sample[0];
+			Thread.yield();
+		}
+	}
+}
 class SharedDifferentialPilot extends Thread{
 	// diameter of the wheels
 	private double diam = DifferentialPilot.WHEEL_SIZE_EV3;

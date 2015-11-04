@@ -25,20 +25,25 @@ public class BehaviorMain {
 		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
 		// used so multiple behaviors can read from the IR and Color sensors
 		SharedIRSensor ir = new SharedIRSensor();
-        SharedUltraSonicSensor us = new SharedUltraSonicSensor(SensorPort.S4);
-		SharedColorSensor clr = new SharedColorSensor();
+        //SharedUltraSonicSensor us = new SharedUltraSonicSensor(SensorPort.S4);
+		//SharedColorSensor clr = new SharedColorSensor();
 		
 		// default behavior, robot simply drives forward
 		Behavior bForward = new BehaviorForward(pilot);
 		// for when an edge is detected in front of the robot
-		Behavior bEdgeAvoid = new BehaviorAvoidEdge(pilot, ir); 
+		//Behavior bEdgeAvoid = new BehaviorAvoidEdge(pilot, ir); 
 		// steer left or right based on reading from the color sensor
-		Behavior bSteer = new BehaviorSteer(pilot, clr);
+		//Behavior bSteer = new BehaviorSteer(pilot, clr);
 		// This behavior allow the robot to be shutdown on button press
 		Behavior die = new BehaviorDie();
 		
+		// for find beacon
+		Behavior bAim = new BehaviorAimAtBeacon(pilot, ir);
+		Behavior bStop = new BehaviorStopAtBeacon(pilot,ir);
+		
 		// the behavior priority list for the robot
-		Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
+		//Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
+		Behavior[] behave = {bForward, bAim, bStop, die};
 		arby = new Arbitrator(behave);
 		arby.start();	
 	}
@@ -114,12 +119,14 @@ class SharedIRSensor extends Thread {
 	public void run() {
 		while (true) {
 			// retrieve sample
-			float[] sample = new float[sp.sampleSize()];
-			sp.fetchSample(sample, 0);
-			if (mode.equals("seek")){
+			if (mode == "seek"){
+				float[] sample = new float[8];
+				sp.fetchSample(sample, 0);
 				bearing = (int)sample[0];
 				distance = (int)sample[1];
 			}else{
+				float[] sample = new float[sp.sampleSize()];
+				sp.fetchSample(sample, 0);
 				// store sample for use by Behaviors
 				distance = (int)sample[0];
 			}
@@ -139,13 +146,13 @@ class SharedIRSensor extends Thread {
 	
 	public void tmpSeek(){
 		if (mode == "seek"){
-			float[] sample = new float[sp.sampleSize()];
+			float[] sample = new float[8];
 			sp.fetchSample(sample, 0);
 			bearing = (int)sample[0];
 			distance = (int)sample[1];
 		}else{
 			sp = ir.getSeekMode();
-			float[] sample = new float[sp.sampleSize()];
+			float[] sample = new float[8];
 			sp.fetchSample(sample, 0);
 			bearing = (int)sample[0];
 			distance = (int)sample[1];
@@ -170,12 +177,13 @@ class SharedIRSensor extends Thread {
 class SharedUltraSonicSensor extends Thread {	
     NXTUltrasonicSensor us;
     // sets the IR sensor to the distance mode which return the distance from an object
-    SampleProvider sp = us.getDistanceMode();
+    SampleProvider sp;
     public int distance = 255;
     
     //thread is started
     SharedUltraSonicSensor(Port p) {
     	this.us = new NXTUltrasonicSensor(p);
+    	this.sp = this.us.getDistanceMode();
         this.setDaemon(true);
         this.start();
     }

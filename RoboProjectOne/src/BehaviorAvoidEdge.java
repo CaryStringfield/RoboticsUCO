@@ -19,6 +19,9 @@ public class BehaviorAvoidEdge implements Behavior {
 	
 	@Override
 	public boolean takeControl() {
+		//set to distance mode
+		this.ir.setDistance();
+		
 		// take control if the distance on the IR sensor is too high
 		return (ir.distance>edgeThreshold);
 	}

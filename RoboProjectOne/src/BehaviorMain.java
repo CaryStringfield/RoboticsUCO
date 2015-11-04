@@ -99,14 +99,22 @@ class SharedIRSensor extends Thread {
 	// sets the IR sensor to the distance mode which return the distance from an object
 	SampleProvider sp = ir.getDistanceMode();
 	public int distance = 255;
+	String mode; //holds mode state
 	
 	//thread is started
 	SharedIRSensor() {
+		this.mode = "distance"; //default to distance mode
 		this.setDaemon(true);
 		this.start();
 	}
 	
 	public void run() {
+		//change the ir mode based on what is needed at the time
+		if(this.mode == "seek")
+			sp = ir.getSeekMode();
+		else
+			sp = ir.getDistanceMode();
+		
 		while (true) {
 			// retrieve sample
 			float[] sample = new float[sp.sampleSize()];
@@ -114,7 +122,15 @@ class SharedIRSensor extends Thread {
 			// store sample for use by Behaviors
 			distance = (int)sample[0];
 			Thread.yield();
-		}
+		}		
+	}
+	
+	public void setSeek() {
+		this.mode = "seek";
+	}
+	
+	public void setDistance() {
+		this.mode = "distance";
 	}
 }
 

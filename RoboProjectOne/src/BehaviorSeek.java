@@ -19,7 +19,7 @@ public class BehaviorSeek implements Behavior {
 	public BehaviorSeek(SharedDifferentialPilot sharedPilot, SharedIRSensor ir){
 		this.ir = ir;
 		this.sharedPilot = sharedPilot;
-		this.seek = ir.getMode("Seek");
+//		this.seek = ir.getMode("Seek");
 		vals = new float [8];
 		
 	}
@@ -27,6 +27,9 @@ public class BehaviorSeek implements Behavior {
 	
 	@Override
 	public boolean takeControl() {
+		//set to seek mode
+		this.ir.setSeek();
+		
 		// take control
 		return (looking);
 	}
@@ -36,7 +39,7 @@ public class BehaviorSeek implements Behavior {
 		// look for beacon
 		Delay.msDelay(50);
 		
-		seek.fetchSample(vals,0);
+		seek.fetchSample(vals,0); //this may break here
 		bearing = (int)vals[0];
 		range = (int)vals[1];
 		

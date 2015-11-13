@@ -9,7 +9,7 @@ public class BehaviorSteer implements Behavior {
 	// the amount to steer to or from the edge
 	private int correction = 30;
 	// the allowed limit to be read from the UltraSonic sensor
-	private float edgeThreshold = 0.06f;
+	private float edgeThreshold = 0.07f;
 
 	//constructor to initialize sensor and motor
 	public  BehaviorSteer(SharedDifferentialPilot pilot, SharedUltraSonicSensor leftUSS, SharedUltraSonicSensor rightUSS) {

@@ -8,7 +8,7 @@ public class BehaviorAvoidEdge implements Behavior {
 	private SharedDifferentialPilot sharedPilot;
 
 	// the allowed limit to be read from the UltraSonic sensor
-	private float edgeThreshold = 0.06f;
+	private float edgeThreshold = 0.07f;
 	// the distance to back up
 	private int backoffDistance = -8;
 	// store distance reading for each side

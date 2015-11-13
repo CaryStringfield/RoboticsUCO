@@ -26,15 +26,16 @@ public class BehaviorMain {
 		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
 		// used so multiple behaviors can read from the IR and Color sensors
 		SharedIRSensor ir = new SharedIRSensor();
-        //SharedUltraSonicSensor us = new SharedUltraSonicSensor(SensorPort.S4);
+        SharedUltraSonicSensor lus = new SharedUltraSonicSensor(SensorPort.S3);
+        SharedUltraSonicSensor rus = new SharedUltraSonicSensor(SensorPort.S4);
 		//SharedColorSensor clr = new SharedColorSensor();
 		
 		// default behavior, robot simply drives forward
 		Behavior bForward = new BehaviorForward(pilot);
 		// for when an edge is detected in front of the robot
-		//Behavior bEdgeAvoid = new BehaviorAvoidEdge(pilot, ir); 
+		Behavior bEdgeAvoid = new BehaviorAvoidEdge(pilot, lus,rus); 
 		// steer left or right based on reading from the color sensor
-		//Behavior bSteer = new BehaviorSteer(pilot, clr);
+		Behavior bSteer = new BehaviorSteer(pilot, lus,rus);
 		// This behavior allow the robot to be shutdown on button press
 		Behavior die = new BehaviorDie();
 		
@@ -43,8 +44,8 @@ public class BehaviorMain {
 		Behavior bStop = new BehaviorStopAtBeacon(pilot,ir);
 		
 		// the behavior priority list for the robot
-		//Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
-		Behavior[] behave = {bForward, bAim, bStop, die};
+		Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
+		//Behavior[] behave = {bForward, bAim, bStop, die};
 		arby = new Arbitrator(behave);
 		arby.start();	
 	}
@@ -230,7 +231,7 @@ class SharedDifferentialPilot extends Thread{
 	// width of distance between wheels
 	private double trackwidth = 14.5;
 	// forward speed
-	private float travelSpeed = 10;
+	private float travelSpeed = 8;
 	// turn speed
 	private float rotateSpeed = 50;
 	

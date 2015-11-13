@@ -178,7 +178,7 @@ class SharedUltraSonicSensor extends Thread {
     NXTUltrasonicSensor us;
     // sets the IR sensor to the distance mode which return the distance from an object
     SampleProvider sp;
-    public int distance = 255;
+    public float distance = 255.0f;
     
     //thread is started
     SharedUltraSonicSensor(Port p) {
@@ -194,9 +194,14 @@ class SharedUltraSonicSensor extends Thread {
             float[] sample = new float[sp.sampleSize()];
             sp.fetchSample(sample, 0);
             // store sample for use by Behaviors
-            distance = (int)sample[0];
+            distance = sample[0];
             Thread.yield();
         }
+    }
+    
+    public float getDistance()
+    {
+    	retrun distance;
     }
 }
 

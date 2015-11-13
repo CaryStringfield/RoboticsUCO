@@ -2,28 +2,29 @@ import lejos.robotics.subsumption.Behavior;
 
 public class BehaviorAvoidEdge implements Behavior {
 	// used for detecting the edge
-	private SharedIRSensor ir;
+	private SharedUltraSonicSensor leftUSS;
+	private SharedUltraSonicSensor rightUSS;
 	// used for stopping and rotating the robot
 	private SharedDifferentialPilot sharedPilot;
-	
-	// the allowed limit to be read from the ir sensor
-	private int edgeThreshold = 5;
+
+	// the allowed limit to be read from the UltraSonic sensor
+	private float edgeThreshold = 0.06f;
 	// the distance to back up
 	private int backoffDistance = -8;
-	
-	public BehaviorAvoidEdge(SharedDifferentialPilot sharedPilot, SharedIRSensor ir){
-		this.ir = ir;
+	// store distance reading for each side
+		
+	public BehaviorAvoidEdge(SharedDifferentialPilot sharedPilot, SharedUltraSonicSensor leftUSS, SharedUltraSonicSensor rightUSS){
+		this.leftUSS =leftUSSr;
+		this.rightUSS =rightUSSr;
 		this.sharedPilot = sharedPilot;
 	}
 	
 	
 	@Override
 	public boolean takeControl() {
-		//set to distance mode
-		this.ir.tmpDist();
 		
-		// take control if the distance on the IR sensor is too high
-		return (ir.distance>edgeThreshold);
+		// take control if the distance on the both UltraSomic sensors are too high
+		return (leftUSS.getDistance()>edgeThreshold && righttUSS.getDistance()>edgeThreshold);
 	}
 
 	@Override

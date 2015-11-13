@@ -14,20 +14,20 @@ public class BehaviorSteer implements Behavior {
 	//constructor to initialize sensor and motor
 	public  BehaviorSteer(SharedDifferentialPilot pilot, SharedUltraSonicSensor leftUSS, SharedUltraSonicSensor rightUSS) {
 		this.sharedPilot = pilot;
-		this.leftUSS =leftUSSr;
-		this.rightUSS =rightUSSr;
+		this.leftUSS =leftUSS;
+		this.rightUSS =rightUSS;
 	}
 
 	@Override
 	public boolean takeControl() {
 	     // the sensor is off the table, so need to turn away from edge
-		return (leftUSS.getDistance()>edgeThreshold || righttUSS.getDistance()>edgeThreshold);
+		return (leftUSS.distance>edgeThreshold || rightUSS.distance>edgeThreshold);
 	}	
 	
 	@Override
 	public void action() {
 				
-		if(rightUSS.getDistance>edgeThreshold)
+		if(rightUSS.distance>edgeThreshold)
 		{
 			
 			// stop moving
@@ -39,7 +39,7 @@ public class BehaviorSteer implements Behavior {
 			// continue driving
 		
 		}
-		else if(leftUSS.getDistance>edgeThreshold)
+		else if(leftUSS.distance>edgeThreshold)
 		{		
 			// stop moving
 			sharedPilot.robot.stop();

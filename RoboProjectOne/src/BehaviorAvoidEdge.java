@@ -14,17 +14,16 @@ public class BehaviorAvoidEdge implements Behavior {
 	// store distance reading for each side
 		
 	public BehaviorAvoidEdge(SharedDifferentialPilot sharedPilot, SharedUltraSonicSensor leftUSS, SharedUltraSonicSensor rightUSS){
-		this.leftUSS =leftUSSr;
-		this.rightUSS =rightUSSr;
+		this.leftUSS =leftUSS;
+		this.rightUSS =rightUSS;
 		this.sharedPilot = sharedPilot;
 	}
 	
 	
 	@Override
 	public boolean takeControl() {
-		
 		// take control if the distance on the both UltraSomic sensors are too high
-		return (leftUSS.getDistance()>edgeThreshold && righttUSS.getDistance()>edgeThreshold);
+		return (leftUSS.distance>edgeThreshold && rightUSS.distance>edgeThreshold);
 	}
 
 	@Override

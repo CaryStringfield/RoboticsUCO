@@ -7,6 +7,7 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3IRSensor;
 import lejos.hardware.sensor.NXTUltrasonicSensor;
 import lejos.hardware.sensor.HiTechnicCompass;
+import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Arbitrator;
@@ -194,14 +195,9 @@ class SharedUltraSonicSensor extends Thread {
             float[] sample = new float[sp.sampleSize()];
             sp.fetchSample(sample, 0);
             // store sample for use by Behaviors
-            distance = sample[0];
+            distance = (float)sample[0];
             Thread.yield();
         }
-    }
-    
-    public float getDistance()
-    {
-    	retrun distance;
     }
 }
 
@@ -257,4 +253,40 @@ class SharedDifferentialPilot extends Thread{
 		}
 	}
 }
+
+class SharedGrabber extends Thread{
+	//public EV3MediumRegulatedMotor motor = new EV3MediumRegulatedMotor(MotorPort.D);
+	public RegulatedMotor motor = Motor.D;
+	public int angle = 2000;
+	public String state = "open";
+	public boolean alive = true;
+	
+	public SharedGrabber(){
+		this.setDaemon(true);;
+		this.start();
+	}
+	
+	public void run(){
+		while(alive){
+			Thread.yield();
+		}
+		motor.close();
+	}
+	
+	public void closeClaw(){
+		if(state=="open"){
+			state = "closing";
+			motor.rotate(-angle);
+			state = "closed";
+		}
+	}
+	public void openClaw(){
+		if(state=="closed"){
+			state = "opening";
+			motor.rotate(angle);
+			state = "open";
+		}
+	}
+}
+
 

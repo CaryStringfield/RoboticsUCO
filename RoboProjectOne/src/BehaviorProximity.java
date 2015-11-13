@@ -1,47 +1,68 @@
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.subsumption.*;
 
-//behavior was an example in the book and is not currently implemented
-//==================================================================== 
 //stop if the robot is within 40 cm of an object and move about
 	public class BehaviorProximity implements Behavior {
-		RegulatedMotor left;
-		RegulatedMotor right;
-		SharedIRSensor ir;
-		boolean backing_up = false;
+		// used to find objects
+		private SharedIRSensor ir;
+		// used for stopping and rotating the robot
+		private SharedDifferentialPilot sharedPilot;
+		//grabber
+		private SharedGrabber grabber;		
+		//detect if the object is small enough to move
+		private boolean movable;
 		
-		//this initialized the motors and IR sensor
-		public  BehaviorProximity(RegulatedMotor left, RegulatedMotor right, SharedIRSensor ir) {
-			this.left = left;
-			this.right = right;
+		public BehaviorProximity(SharedDifferentialPilot sharedPilot, SharedIRSensor ir, SharedGrabber grabber){
 			this.ir = ir;
+			ir.setDistance();
+			this.sharedPilot = sharedPilot;
+			this.movable = true;
+			this.grabber = grabber;
 		}
 		
-		//if the distance is below 40 cm then the thread takes control
+		//if the distance is less within 20 cm then the thread takes control
+		@Override
 		public boolean takeControl() {
 			ir.tmpDist();
-			return (ir.distance < 40);
+			return (ir.distance < 20);
 		}
 		
-		// The behavior originally backed up, we played with the values a bit. 
-		// These may not be the orginal behavior values.
+		// check to see if the object can be moved and grab it
+		@Override
 		public void action() {
-			backing_up = true;
-			
-			left.rotate(600, true);
-			right.rotate(600);
-			
-			left.rotate(-450, true);
-			left.rotate(450);
-			
-			backing_up = false;
+			//look to the left
+			sharedPilot.robot.rotate(30);
+			if (ir.distance < 25) {
+				//look to the right
+				sharedPilot.robot.rotate(-60);
+				if (ir.distance < 25) {
+					//align again
+					sharedPilot.robot.rotate(30);
+					
+					//go forward and grab the object
+					while (ir.distance != 0) {
+						sharedPilot.robot.forward();					
+					}
+					
+					//close claw and celebrate
+					grabber.closeClaw();
+					sharedPilot.robot.rotate(360);
+					grabber.openClaw();
+				}
+				else {
+					sharedPilot.robot.rotate(-15);
+					this.movable = false;
+				}
+			}
+			else {
+				sharedPilot.robot.rotate(15);
+				this.movable = false;		
+			}							
 		}
 		
+		@Override
 		public void suppress() {
-			//wait until backup done
-			while (backing_up) {
-				Thread.yield();
 			}
 		}
-	}
+	
 	

@@ -29,8 +29,8 @@ public class RobotTests {
 		//stopAtEdgeTest(MotorPort.B, MotorPort.C, SensorPort.S1, 3.0);
 
 		// Test Odometry
-		System.out.println("Calibrate Test");
-		Button.waitForAnyPress();
+		//System.out.println("Calibrate Test");
+		//Button.waitForAnyPress();
 		
 		//EV3MediumRegulatedMotor motor = new EV3MediumRegulatedMotor(MotorPort.D);
 		
@@ -48,15 +48,30 @@ public class RobotTests {
 		// width between sides, I think?
 		//double width = 14.5;
 		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
+		SharedGrabber grabber = new SharedGrabber();
 		pilot.robot.setRotateSpeed(10);
 		
-		HiTechnicCompass compass = new HiTechnicCompass(SensorPort.S2);
-		compass.startCalibration();
+		//HiTechnicCompass compass = new HiTechnicCompass(SensorPort.S2);
+		//compass.startCalibration();
 		
-		pilot.robot.rotate(720);
+
 		
-		compass.stopCalibration();
-		compass.close();
+		grabber.closeClaw();
+		while(grabber.state == "closing");
+		
+		pilot.robot.travel(15);
+		pilot.robot.stop();
+		
+		grabber.openClaw();
+		while(grabber.state == "opening");
+		
+		pilot.robot.travel(-15);
+		pilot.robot.stop();
+		
+		grabber.alive = false;
+		
+		//compass.stopCalibration();
+		//compass.close();
 		// used for making 'precise' movements with robot
 		//DifferentialPilot robot = new DifferentialPilot(wheelDiameter,width,Motor.C,Motor.B);
 		//OdometryPoseProvider pp = new OdometryPoseProvider(robot);

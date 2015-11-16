@@ -39,6 +39,10 @@ public class BehaviorMain {
 		// This behavior allow the robot to be shutdown on button press
 		Behavior die = new BehaviorDie();
 		
+		// proximity stuff
+		SharedGrabber grabber = new SharedGrabber();
+		Behavior getObject = new BehaviorProximity(pilot, ir, grabber);
+		
 		// for find beacon
 		Behavior bAim = new BehaviorAimAtBeacon(pilot, ir);
 		Behavior bStop = new BehaviorStopAtBeacon(pilot,ir);

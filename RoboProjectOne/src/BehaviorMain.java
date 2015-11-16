@@ -48,8 +48,9 @@ public class BehaviorMain {
 		Behavior bStop = new BehaviorStopAtBeacon(pilot,ir);
 		
 		// the behavior priority list for the robot
-		Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
+		//Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
 		//Behavior[] behave = {bForward, bAim, bStop, die};
+		Behavior[] behave = {bForward, getObject, die};
 		arby = new Arbitrator(behave);
 		arby.start();	
 	}
@@ -135,6 +136,7 @@ class SharedIRSensor extends Thread {
 				sp.fetchSample(sample, 0);
 				// store sample for use by Behaviors
 				distance = (int)sample[0];
+				LCD.drawString("distance: " + distance + "                             ", 0, 0);
 			}
 			Thread.yield();
 		}		

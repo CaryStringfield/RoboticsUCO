@@ -30,34 +30,37 @@ import lejos.robotics.subsumption.*;
 		// check to see if the object can be moved and grab it
 		@Override
 		public void action() {
+			ir.setDistance();
 			//look to the left
-			sharedPilot.robot.rotate(30);
-			if (ir.distance < 25) {
+			//sharedPilot.robot.rotate(30);
+			//if (ir.distance < 25) {
 				//look to the right
-				sharedPilot.robot.rotate(-60);
-				if (ir.distance < 25) {
+				//sharedPilot.robot.rotate(-60);
+				//if (ir.distance < 25) {
 					//align again
-					sharedPilot.robot.rotate(30);
+					//sharedPilot.robot.rotate(30);
 					
 					//go forward and grab the object
-					while (ir.distance != 0) {
-						sharedPilot.robot.forward();					
-					}
+					//while (ir.distance != 0) {
+					//	sharedPilot.robot.forward();					
+					//}
+					sharedPilot.robot.stop();
 					
 					//close claw and celebrate
 					grabber.closeClaw();
+					while(grabber.state=="closing");
 					sharedPilot.robot.rotate(360);
 					grabber.openClaw();
-				}
-				else {
-					sharedPilot.robot.rotate(-15);
-					this.movable = false;
-				}
-			}
-			else {
-				sharedPilot.robot.rotate(15);
-				this.movable = false;		
-			}							
+				//}
+				//else {
+				//	sharedPilot.robot.rotate(-15);
+				//	this.movable = false;
+				//}
+			//}
+			//else {
+			//	sharedPilot.robot.rotate(15);
+			//	this.movable = false;		
+			//}							
 		}
 		
 		@Override

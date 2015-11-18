@@ -21,7 +21,7 @@ public class BehaviorAimAtBeacon implements Behavior {
 	@Override
 	public boolean takeControl() {
 		ir.tmpSeek();
-		return (ir.bearing > 5 || ir.bearing < -5);
+		return ((ir.bearing > 5 || ir.bearing < -5) && StateManager.getInstance().getState() == 0);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ import lejos.robotics.subsumption.*;
 		@Override
 		public boolean takeControl() {
 			ir.tmpDist();
-			return (ir.distance < 20);
+			return (ir.distance < 20 && ir.distance > 1);
 		}
 		
 		// check to see if the object can be moved and grab it

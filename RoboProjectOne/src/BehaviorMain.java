@@ -22,6 +22,7 @@ public class BehaviorMain {
 	// main method called on start-up
 	// defines behaviors and sensors
 	public static void main (String[] args) {
+		
 		// used so motor control can be shared between behaviors
 		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
 		// used so multiple behaviors can read from the IR and Color sensors
@@ -50,7 +51,9 @@ public class BehaviorMain {
 		// the behavior priority list for the robot
 		//Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
 		//Behavior[] behave = {bForward, bAim, bStop, die};
-		Behavior[] behave = {bForward, getObject, die};
+		
+		Behavior[] behave = {bForward, bAim,  bStop, getObject, bSteer, bEdgeAvoid, die};
+		
 		arby = new Arbitrator(behave);
 		arby.start();	
 	}
@@ -293,6 +296,12 @@ class SharedGrabber extends Thread{
 			motor.rotate(angle);
 			state = "open";
 		}
+	}
+	
+	public String getState()
+	{
+		return state;
+			
 	}
 }
 

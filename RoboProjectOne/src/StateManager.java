@@ -2,30 +2,26 @@
 public class StateManager {
 	
 	private static StateManager manager = new StateManager();
-	private static boolean seekState;
-	private static boolean searchState;
+	private static int state;
+
 	
-	private StateManager(){};
+	private StateManager(){
+		state = 1;
+	};
 	
 	public static StateManager getInstance() {
 		return manager;
 	}
 	
-	protected static void setSeekState() {
-		seekState = true;
-		searchState = false;
+	protected static void setState() {
+		if (state == 0)
+			state = 1;
+		else
+			state = 0;
 	}
-	
-	protected static void setSearchState() {
-		seekState = false;
-		searchState = true;
+			
+	protected static int getState() {
+		return state;
 	}
-	
-	protected static boolean getSeekState() {
-		return seekState;
-	}
-	
-	protected static boolean getSearchState() {
-		return searchState;
-	}
+		
 }

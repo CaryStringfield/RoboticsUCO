@@ -49,8 +49,8 @@ import lejos.robotics.subsumption.*;
 					//close claw and celebrate
 					grabber.closeClaw();
 					while(grabber.state=="closing");
-					sharedPilot.robot.rotate(360);
-					grabber.openClaw();
+					//sharedPilot.robot.rotate(360);
+					//grabber.openClaw();
 				//}
 				//else {
 				//	sharedPilot.robot.rotate(-15);

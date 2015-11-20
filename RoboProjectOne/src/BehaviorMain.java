@@ -136,6 +136,7 @@ class SharedIRSensor extends Thread {
 				sp.fetchSample(sample, 0);
 				bearing = (int)sample[0];
 				distanceSeek = (int)sample[1];
+				LCD.drawString("distance: " + distanceSeek + "                             ", 0, 0);
 			}else{
 				float[] sample = new float[sp.sampleSize()];
 				sp.fetchSample(sample, 0);
@@ -208,6 +209,12 @@ class SharedUltraSonicSensor extends Thread {
             sp.fetchSample(sample, 0);
             // store sample for use by Behaviors
             distance = (float)sample[0];
+            
+            if (us.getPort() == SensorPort.S3)
+            	LCD.drawString("Ldistance: " + distance + "                             ", 0, 1);
+            else
+    			LCD.drawString("Rdistance: " + distance + "                             ", 0, 2);
+            
             Thread.yield();
         }
     }

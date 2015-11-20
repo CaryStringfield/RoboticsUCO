@@ -36,6 +36,8 @@ public class BehaviorSteer implements Behavior {
 			sharedPilot.robot.travel(-5);
 			// make a rotation to move away from the edge of the table
 			sharedPilot.robot.rotate(correction);
+			// move forward a little
+			sharedPilot.robot.travel(5);
 			// continue driving
 		
 		}
@@ -47,6 +49,8 @@ public class BehaviorSteer implements Behavior {
 			sharedPilot.robot.travel(-5);
 			// make a rotation to move away from the edge of the table
 			sharedPilot.robot.rotate(-correction);
+			// back away from the edge
+			sharedPilot.robot.travel(5);
 			// continue driving
 			
 		}

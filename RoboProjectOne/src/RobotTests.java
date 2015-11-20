@@ -94,7 +94,7 @@ public class RobotTests {
 		// end position
 
 		System.out.println("End...");// + pp.getPose());
-		Button.waitForAnyPress();
+		//Button.waitForAnyPress();
 		
 	}
 	

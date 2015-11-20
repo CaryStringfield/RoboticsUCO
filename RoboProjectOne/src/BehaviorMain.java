@@ -297,12 +297,6 @@ class SharedGrabber extends Thread{
 			state = "open";
 		}
 	}
-	
-	public String getState()
-	{
-		return state;
-			
-	}
 }
 
 

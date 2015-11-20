@@ -2,26 +2,28 @@
 public class StateManager {
 	
 	private static StateManager manager = new StateManager();
-	private static int state;
+	private int state;
 
 	
 	private StateManager(){
 		state = 1;
 	};
 	
-	public static StateManager getInstance() {
+	public synchronized static StateManager getInstance() {
+		if (manager == null)
+			manager = new StateManager();
 		return manager;
 	}
 	
-	protected static void setState() {
-		if (state == 0)
-			state = 1;
+	protected void setState() {
+		if (manager.state == 0)
+			manager.state = 1;
 		else
-			state = 0;
+			manager.state = 0;
 	}
 			
-	protected static int getState() {
-		return state;
+	protected int getState() {
+		return manager.state;
 	}
 		
 }

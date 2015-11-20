@@ -137,6 +137,7 @@ class SharedIRSensor extends Thread {
 				bearing = (int)sample[0];
 				distanceSeek = (int)sample[1];
 				LCD.drawString("distance: " + distanceSeek + "                             ", 0, 0);
+            	LCD.drawString("bearing: " + bearing + "                             ", 0, 3);
 			}else{
 				float[] sample = new float[sp.sampleSize()];
 				sp.fetchSample(sample, 0);

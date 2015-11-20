@@ -36,6 +36,9 @@ public class BehaviorStopAtBeacon implements Behavior {
 		grabber.openClaw();
 		while(grabber.state=="opening");
 		
+		sharedPilot.robot.travel(-5);
+		sharedPilot.robot.rotate(180);
+		
 		StateManager.getInstance().setState(1);
 	}
 

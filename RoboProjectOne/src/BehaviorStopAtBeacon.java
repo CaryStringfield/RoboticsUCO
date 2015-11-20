@@ -23,7 +23,7 @@ public class BehaviorStopAtBeacon implements Behavior {
 	public boolean takeControl() {
 		// take control
 		ir.tmpSeek();
-		return (ir.distance < 10 && (ir.bearing < 5 && ir.bearing > -5));
+		return ((ir.distance < 10 && (ir.bearing < 5 && ir.bearing > -5)) && StateManager.getInstance().getState() == 0);
 	}
 
 	@Override

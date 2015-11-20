@@ -47,11 +47,12 @@ public class BehaviorMain {
 		// for find beacon
 		Behavior bAim = new BehaviorAimAtBeacon(pilot, ir);
 		Behavior bStop = new BehaviorStopAtBeacon(pilot,ir,grabber);
+		Behavior bCorrect = new BehaviorSeekCorrect(pilot,ir);
 		
 		// the behavior priority list for the robot
 		//Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
 		//Behavior[] behave = {bForward, bAim, bStop, die};
-		Behavior[] behave = {bForward, bAim,  bStop, getObject, bSteer, bEdgeAvoid, die};
+		Behavior[] behave = {bForward, bCorrect, bAim,  bStop, getObject, bSteer, bEdgeAvoid, die};
 		
 		arby = new Arbitrator(behave);
 		arby.start();	

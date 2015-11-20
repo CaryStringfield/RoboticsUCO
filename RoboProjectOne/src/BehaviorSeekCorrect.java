@@ -9,17 +9,12 @@ public class BehaviorSeekCorrect implements Behavior {
 	// used for stopping and rotating the robot
 	private SharedDifferentialPilot sharedPilot;
 	public boolean looking = true;//looking for or traveling to the beacon
-	private SensorMode seek;
-	private float [] vals;
-	private int range;
-	private int bearing;
 
 	
 	public BehaviorSeekCorrect(SharedDifferentialPilot sharedPilot, SharedIRSensor ir){
 		this.ir = ir;
 		this.sharedPilot = sharedPilot;
 //		this.seek = ir.getMode("Seek");
-		vals = new float [8];
 		
 	}
 	
@@ -33,9 +28,10 @@ public class BehaviorSeekCorrect implements Behavior {
 	@Override
 	public void action() {
 		ir.setSeek();
-		while(ir.bearing != 0){//turn
+		while(ir.bearing == 0){//turn
 			sharedPilot.robot.rotate(-2);
 		}//end while looking
+		StateManager.getInstance().setState(0);
 	}
 
 	@Override	

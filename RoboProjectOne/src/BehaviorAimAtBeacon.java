@@ -32,7 +32,7 @@ public class BehaviorAimAtBeacon implements Behavior {
 			{
 				sharedPilot.robot.rotate(-2);				
 			}
-			else if(ir.distance > 10  && ir.bearing < -5)//and -5
+			else if(ir.distanceSeek > 10  && ir.bearing < -5)//and -5
 			{
 				sharedPilot.robot.rotate(2);
 			}

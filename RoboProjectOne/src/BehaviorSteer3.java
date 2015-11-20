@@ -17,7 +17,7 @@ public class BehaviorSteer3 implements Behavior {
 	@Override
 	public boolean takeControl() {
 		// distHigh means sensor is more on the table, so need to turn toward edge
-		return (sharedColor.distHigh || sharedColor.distLow);		
+		return false;//(sharedColor.distHigh || sharedColor.distLow);		
 	}	
 	
 	@Override
@@ -30,15 +30,15 @@ public class BehaviorSteer3 implements Behavior {
 			
 			if (!temp){
 				sharedPilot.robot.stop();
-				if (sharedColor.distHigh)
+				//if (sharedColor.distHigh)
 					sharedPilot.robot.steer(-correction);
 				//-----------------------------------------------
 				//take the third boolean variable into account
 				//-----------------------------------------------
-				else if(sharedColor.distLow) {
+				//else if(sharedColor.distLow) {
 						sharedPilot.robot.stop();
 						sharedPilot.robot.steer(correction);
-				}					
+				//}					
 				//-----------------------------------------------
 				/*else if(sharedColor.distLow)
 					sharedPilot.robot.steer(correction);
@@ -46,13 +46,13 @@ public class BehaviorSteer3 implements Behavior {
 				temp = true;
 			}
 			
-			if (sharedColor.distHigh && isLeft){
+			//if (sharedColor.distHigh && isLeft){
 				temp = false;
 				isLeft = false;
-			}else if (sharedColor.distLow && !isLeft){
+			//}else if (sharedColor.distLow && !isLeft){
 				temp = false;
 				isLeft = true;
-			}
+			//}
 			Thread.yield();
 		}
 	}

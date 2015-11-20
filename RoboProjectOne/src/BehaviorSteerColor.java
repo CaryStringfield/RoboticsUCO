@@ -21,7 +21,7 @@ public class BehaviorSteerColor implements Behavior {
 		// distHigh means sensor is more on the table, so need to turn toward edge
 		// distLow means sensor is more off the table, so need to turn away from edge
 		// take control when either it true
-		return (sharedColor.distHigh || sharedColor.distLow);		
+		return false;//(sharedColor.distHigh || sharedColor.distLow);		
 	}	
 	
 	@Override
@@ -41,10 +41,10 @@ public class BehaviorSteerColor implements Behavior {
 				// stop the robot before changing direction
 				sharedPilot.robot.stop();
 				// if color sensor reads high, steer toward the edge
-				if (sharedColor.distHigh)
+				//if (sharedColor.distHigh)
 					sharedPilot.robot.steer(-correction);
 				// the color sensor is reading low
-				else if(sharedColor.distLow) {
+				//else if(sharedColor.distLow) {
 					// if the alignment steps have not been taking
 					if (maxrot > 0){
 						// stop moving
@@ -63,19 +63,19 @@ public class BehaviorSteerColor implements Behavior {
 						sharedPilot.robot.steer(correction);
 					}
 						
-				}
+				//}
 				temp = true;
 			}
 			
 			// if the sensor says the robot is moving one way
 			// but isLeft says something else, then a course change is required
-			if (sharedColor.distHigh && isLeft){
+			//if (sharedColor.distHigh && isLeft){
 				temp = false;
 				isLeft = false;
-			}else if (sharedColor.distLow && !isLeft){
+			//}else if (sharedColor.distLow && !isLeft){
 				temp = false;
 				isLeft = true;
-			}
+			//}
 			Thread.yield();
 		}
 	}

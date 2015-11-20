@@ -6,6 +6,7 @@ public class StateManager {
 
 	
 	private StateManager(){
+		// looking around for stuff
 		state = 1;
 	};
 	
@@ -20,6 +21,9 @@ public class StateManager {
 			manager.state = 1;
 		else
 			manager.state = 0;
+	}
+	protected void setState(int s) {
+			manager.state = s;
 	}
 			
 	protected int getState() {

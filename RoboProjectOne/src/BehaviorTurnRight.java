@@ -24,7 +24,7 @@ public class BehaviorTurnRight implements Behavior {
 	@Override
 	public boolean takeControl() {
 		// distHigh means sensor is more on the table, so need to turn toward edge
-		return (sharedColor.distHigh && !sharedColor.distLow);		
+		return false;//(sharedColor.distHigh && !sharedColor.distLow);		
 	}	
 
 	@Override

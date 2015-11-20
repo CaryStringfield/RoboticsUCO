@@ -29,7 +29,7 @@ public class BehaviorMain {
 		SharedIRSensor ir = new SharedIRSensor();
         SharedUltraSonicSensor lus = new SharedUltraSonicSensor(SensorPort.S3);
         SharedUltraSonicSensor rus = new SharedUltraSonicSensor(SensorPort.S4);
-		//SharedColorSensor clr = new SharedColorSensor();
+		SharedColorSensor clr = new SharedColorSensor();
 		
 		// default behavior, robot simply drives forward
 		Behavior bForward = new BehaviorForward(pilot);
@@ -42,16 +42,15 @@ public class BehaviorMain {
 		
 		// proximity stuff
 		SharedGrabber grabber = new SharedGrabber();
-		Behavior getObject = new BehaviorProximity(pilot, ir, grabber);
+		Behavior getObject = new BehaviorProximity(pilot, clr, grabber);
 		
 		// for find beacon
 		Behavior bAim = new BehaviorAimAtBeacon(pilot, ir);
-		Behavior bStop = new BehaviorStopAtBeacon(pilot,ir);
+		Behavior bStop = new BehaviorStopAtBeacon(pilot,ir,grabber);
 		
 		// the behavior priority list for the robot
 		//Behavior[] behave = {bForward, bSteer, bEdgeAvoid, die};
 		//Behavior[] behave = {bForward, bAim, bStop, die};
-		
 		Behavior[] behave = {bForward, bAim,  bStop, getObject, bSteer, bEdgeAvoid, die};
 		
 		arby = new Arbitrator(behave);
@@ -60,20 +59,21 @@ public class BehaviorMain {
 }
 
 class SharedColorSensor extends Thread {
-	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S3);
+	EV3ColorSensor clr = new EV3ColorSensor(SensorPort.S2);
 	SampleProvider sp = clr.getRedMode();
 	// This is the desired value to be read from the sensor. The values will
 	// vary based upon the table color. This is where we calibrate the sensor.
-	public float normal = .1f;
+	//public float normal = .1f;
 	// this is the +-error from the normal that is allowed to be read
-	public float tolerance = .03f;
+	//public float tolerance = .03f;
 	// whether the read value is high or low
-	boolean distLow, distHigh;
+	//boolean distLow, distHigh;
+	public float value = 0f;
 	
 	// the sensor is initialized to false and thread is started
 	SharedColorSensor() {
-		this.distLow = false;
-		this.distHigh = false;
+		//this.distLow = false;
+		//this.distHigh = false;
 		this.setDaemon(true);
 		this.start();
 	}
@@ -84,8 +84,9 @@ class SharedColorSensor extends Thread {
 			float[] sample = new float[sp.sampleSize()];
 			sp.fetchSample(sample, 0);
 			
+			value = (float)sample[0];
 			// if value is low (color sensor too far off the table)
-			if(sample[0] < normal - tolerance){
+			/*if(sample[0] < normal - tolerance){
 				distLow = true;
 				distHigh = false;
 			}
@@ -105,7 +106,7 @@ class SharedColorSensor extends Thread {
 			LCD.drawString("distHigh: " + distHigh + " ", 0, 2);
 			LCD.drawString("normal: " + normal + " ", 0, 3);
 			LCD.drawString("tolerance: +-" + tolerance + " ", 0, 4);
-			LCD.drawString("sample size: " + sample.length, 0, 5);
+			LCD.drawString("sample size: " + sample.length, 0, 5);*/
 			Thread.yield();
 		}
 	}
@@ -116,6 +117,7 @@ class SharedIRSensor extends Thread {
 	// sets the IR sensor to the distance mode which return the distance from an object
 	SampleProvider sp = ir.getDistanceMode();
 	public int distance = 255;
+	public int distanceSeek = 255;
 	public int bearing = 255;
 	String mode; //holds mode state
 	
@@ -133,7 +135,7 @@ class SharedIRSensor extends Thread {
 				float[] sample = new float[8];
 				sp.fetchSample(sample, 0);
 				bearing = (int)sample[0];
-				distance = (int)sample[1];
+				distanceSeek = (int)sample[1];
 			}else{
 				float[] sample = new float[sp.sampleSize()];
 				sp.fetchSample(sample, 0);
@@ -160,13 +162,13 @@ class SharedIRSensor extends Thread {
 			float[] sample = new float[8];
 			sp.fetchSample(sample, 0);
 			bearing = (int)sample[0];
-			distance = (int)sample[1];
+			distanceSeek = (int)sample[1];
 		}else{
 			sp = ir.getSeekMode();
 			float[] sample = new float[8];
 			sp.fetchSample(sample, 0);
 			bearing = (int)sample[0];
-			distance = (int)sample[1];
+			distanceSeek = (int)sample[1];
 			sp = ir.getDistanceMode();
 		}
 	}

@@ -7,15 +7,17 @@ import lejos.utility.Delay;
 public class BehaviorStopAtBeacon implements Behavior {
 	// used for detecting the edge
 	private SharedIRSensor ir;
+	//grabber
+	private SharedGrabber grabber;
 	// used for stopping and rotating the robot
 	private SharedDifferentialPilot sharedPilot;
 	public boolean looking = true;//looking for or traveling to the beacon
 
 	
-	public BehaviorStopAtBeacon(SharedDifferentialPilot sharedPilot, SharedIRSensor ir){
+	public BehaviorStopAtBeacon(SharedDifferentialPilot sharedPilot, SharedIRSensor ir, SharedGrabber grab){
 		this.ir = ir;
 		this.sharedPilot = sharedPilot;
-		
+		this.grabber = grab;
 	}
 	
 	
@@ -23,7 +25,7 @@ public class BehaviorStopAtBeacon implements Behavior {
 	public boolean takeControl() {
 		// take control
 		ir.tmpSeek();
-		return ((ir.distance < 10 && (ir.bearing < 5 && ir.bearing > -5)) && StateManager.getInstance().getState() == 0);
+		return ((ir.distanceSeek < 10 && (ir.bearing < 5 && ir.bearing > -5)) && StateManager.getInstance().getState() == 0);
 	}
 
 	@Override
@@ -31,6 +33,10 @@ public class BehaviorStopAtBeacon implements Behavior {
 		// look for beacon
 		//Delay.msDelay(50);
 		sharedPilot.robot.stop();
+		grabber.openClaw();
+		while(grabber.state=="opening");
+		
+		StateManager.getInstance().setState(1);
 	}
 
 	@Override	

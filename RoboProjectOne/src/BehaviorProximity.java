@@ -4,7 +4,7 @@ import lejos.robotics.subsumption.*;
 //stop if the robot is within 40 cm of an object and move about
 	public class BehaviorProximity implements Behavior {
 		// used to find objects
-		private SharedIRSensor ir;
+		private SharedColorSensor clr;
 		// used for stopping and rotating the robot
 		private SharedDifferentialPilot sharedPilot;
 		//grabber
@@ -12,9 +12,9 @@ import lejos.robotics.subsumption.*;
 		//detect if the object is small enough to move
 		private boolean movable;
 		
-		public BehaviorProximity(SharedDifferentialPilot sharedPilot, SharedIRSensor ir, SharedGrabber grabber){
-			this.ir = ir;
-			ir.setDistance();
+		public BehaviorProximity(SharedDifferentialPilot sharedPilot, SharedColorSensor ir, SharedGrabber grabber){
+			this.clr = ir;
+			//ir.setDistance();
 			this.sharedPilot = sharedPilot;
 			this.movable = true;
 			this.grabber = grabber;
@@ -23,14 +23,15 @@ import lejos.robotics.subsumption.*;
 		//if the distance is less within 20 cm then the thread takes control
 		@Override
 		public boolean takeControl() {
-			ir.tmpDist();
-			return ((ir.distance < 20 && ir.distance > 1) && StateManager.getInstance().getState() == 1);
+			//ir.tmpDist();
+			//return ((ir.distance < 20 && ir.distance > 1) && StateManager.getInstance().getState() == 1);
+			return (clr.value > 0.02f);
 		}
 		
 		// check to see if the object can be moved and grab it
 		@Override
 		public void action() {
-			ir.setDistance();
+			//ir.setDistance();
 			//look to the left
 			//sharedPilot.robot.rotate(30);
 			//if (ir.distance < 25) {
@@ -49,6 +50,7 @@ import lejos.robotics.subsumption.*;
 					//close claw and celebrate
 					grabber.closeClaw();
 					while(grabber.state=="closing");
+					StateManager.getInstance().setState(0);
 					//sharedPilot.robot.rotate(360);
 					//grabber.openClaw();
 				//}

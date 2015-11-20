@@ -24,7 +24,7 @@ public class BehaviorTurnLeft implements Behavior {
 	@Override
 	public boolean takeControl() {
 		// dist low means that sensor is farther off table, needs to turn away
-		return (sharedColor.distLow && !sharedColor.distHigh);		
+		return false;//(sharedColor.distLow && !sharedColor.distHigh);		
 	}	
 
 	@Override

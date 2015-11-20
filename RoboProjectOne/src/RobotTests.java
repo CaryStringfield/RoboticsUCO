@@ -47,26 +47,31 @@ public class RobotTests {
 		//double wheelDiameter = DifferentialPilot.WHEEL_SIZE_EV3;
 		// width between sides, I think?
 		//double width = 14.5;
-		SharedDifferentialPilot pilot = new SharedDifferentialPilot();
+		//SharedDifferentialPilot pilot = new SharedDifferentialPilot();
 		SharedGrabber grabber = new SharedGrabber();
-		pilot.robot.setRotateSpeed(10);
-		
+		//pilot.robot.setRotateSpeed(10);
+
+		// if crashed and claw is closed
+		grabber.state = "closed";
+		grabber.openClaw();
+		while(grabber.state == "opening")
+			
 		//HiTechnicCompass compass = new HiTechnicCompass(SensorPort.S2);
 		//compass.startCalibration();
 		
 
 		
-		grabber.closeClaw();
-		while(grabber.state == "closing");
+		//grabber.closeClaw();
+		//while(grabber.state == "closing");
 		
-		pilot.robot.travel(15);
-		pilot.robot.stop();
+		//pilot.robot.travel(15);
+		//pilot.robot.stop();
 		
-		grabber.openClaw();
-		while(grabber.state == "opening");
+		//grabber.openClaw();
+		//while(grabber.state == "opening");
 		
-		pilot.robot.travel(-15);
-		pilot.robot.stop();
+		//pilot.robot.travel(-15);
+		//pilot.robot.stop();
 		
 		grabber.alive = false;
 		

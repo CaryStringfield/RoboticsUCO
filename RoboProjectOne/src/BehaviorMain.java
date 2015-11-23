@@ -134,18 +134,26 @@ class SharedIRSensor extends Thread {
 		while (true) {
 			// retrieve sample
 			if (mode == "seek"){
+				try{
 				float[] sample = new float[8];
 				sp.fetchSample(sample, 0);
 				bearing = (int)sample[0];
 				distanceSeek = (int)sample[1];
 				LCD.drawString("distance: " + distanceSeek + "                             ", 0, 0);
             	LCD.drawString("bearing: " + bearing + "                             ", 0, 3);
+				}catch(Exception e){
+					
+				}
 			}else{
+				try{
 				float[] sample = new float[sp.sampleSize()];
 				sp.fetchSample(sample, 0);
 				// store sample for use by Behaviors
 				distance = (int)sample[0];
 				LCD.drawString("distance: " + distance + "                             ", 0, 0);
+				}catch(Exception e){
+					
+				}
 			}
 			Thread.yield();
 		}		
@@ -162,6 +170,7 @@ class SharedIRSensor extends Thread {
 	}
 	
 	public void tmpSeek(){
+		try{
 		if (mode == "seek"){
 			float[] sample = new float[8];
 			sp.fetchSample(sample, 0);
@@ -175,8 +184,12 @@ class SharedIRSensor extends Thread {
 			distanceSeek = (int)sample[1];
 			sp = ir.getDistanceMode();
 		}
+		}catch(Exception e){
+			
+		}
 	}
 	public void tmpDist(){
+		try{
 		if (mode == "seek"){
 			sp = ir.getDistanceMode();
 			float[] sample = new float[sp.sampleSize()];
@@ -187,6 +200,9 @@ class SharedIRSensor extends Thread {
 			float[] sample = new float[sp.sampleSize()];
 			sp.fetchSample(sample, 0);
 			distance = (int)sample[0];
+		}
+		}catch(Exception e){
+			
 		}
 	}
 }

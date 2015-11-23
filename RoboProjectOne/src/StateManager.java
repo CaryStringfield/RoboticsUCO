@@ -7,7 +7,7 @@ public class StateManager {
 	
 	private StateManager(){
 		// looking around for stuff
-		state = 1;
+		state = 2;
 	};
 	
 	public synchronized static StateManager getInstance() {
